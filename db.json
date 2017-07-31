@@ -1,0 +1,12 @@
+{
+	"rajasthan": {
+		"cities": {
+			"D": ["DELHI"],
+			"J": ["JAIPUR"],
+			"A": ["AJMER", "MOUNT ABU"],
+			"K": ["KOTA"],
+			"U": ["UDAIPUR"],
+			"M": ["MOUNT ABU"]
+		}
+	}
+}
