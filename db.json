@@ -41,6 +41,12 @@
 				"KOTA": ["MOUNT ABU-KOTA"],
 				"UDAIPUR": ["MOUNT ABU-KOTA"]
 			}
+		},
+		"buses_on_route": {
+			"DELHI-UDAIPUR": [],
+			"DELHI-KOTA": [],
+			"JAIPUR-UDAIPUR": [],
+			"KOTA-MOUNT ABU": []
 		}
 	}
 }
