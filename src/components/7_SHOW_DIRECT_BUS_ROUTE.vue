@@ -2,15 +2,28 @@
   <div>
     <v-container fluid id="main">
       <v-card class="white lighten-4 elevation-3">
+
         <li v-for="stop in stop_name_arr">
           {{stop}}
         </li>
+
+        <direct_bus_travel_time_in_between_stops>
+        </direct_bus_travel_time_in_between_stops>
+
+        <direct_bus_travel_distance_in_between_stops>
+        </direct_bus_travel_distance_in_between_stops>
+
       </v-card>
     </v-container>
   </div>
 </template>
 
 <script>
+
+import direct_bus_travel_time_in_between_stops from
+  './7_SHOW_DIRECT_BUS_ROUTE_components/7.1_direct_bus_travel_time_in_between_stops'
+import direct_bus_travel_distance_in_between_stops from
+    './7_SHOW_DIRECT_BUS_ROUTE_components/7.2_direct_bus_travel_distance_in_between_stops'
 
 import {mapGetters} from 'vuex'
 import {mapMutations} from 'vuex'
@@ -172,6 +185,10 @@ export default{
     ...mapGetters([
       'selected_bus_detail'
     ]),
+  },
+  components :{
+    'direct_bus_travel_time_in_between_stops':direct_bus_travel_time_in_between_stops,
+    'direct_bus_travel_distance_in_between_stops':direct_bus_travel_distance_in_between_stops
   },
   beforeMount(){
     this.show_bus_route(this.$store.state.selected_bus_detail);
