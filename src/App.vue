@@ -39,7 +39,7 @@
 
 
     <!-- footer -->
-      <v-bottom-nav
+      <!--v-bottom-nav
         absolute
         shift
         value="true"
@@ -70,7 +70,7 @@
           <v-icon>&#xE55F</v-icon>
         </v-btn>
 
-      </v-bottom-nav>
+      </v-bottom-nav-->
     <!-- footer ends -->
 
   </div>

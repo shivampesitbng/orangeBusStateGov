@@ -57,9 +57,9 @@ export default {
     ...mapMutations([
 
     ]),
-    show_hide_footer(){
+    /*show_hide_footer(){
       document.getElementById('home_footer').style.visibility = 'hidden';
-    },
+    },*/
     search_city_function(){
       //console.log(this.search_city_name[0]);
       if(this.search_city_name[0] == undefined){
@@ -125,7 +125,7 @@ export default {
     }
   },
   mounted(){
-    this.show_hide_footer();
+    //this.show_hide_footer();
     this.$refs.search.focus();
   },
   firebase : {
