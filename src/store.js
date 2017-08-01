@@ -27,6 +27,12 @@ export const store = new Vuex.Store({
       name : 'City Name'
     },
 
+    //selected bus -> details
+    selected_bus_detail :{
+      no : '',
+      route : ''
+    },
+
     //objects -> details of selected date & time
     selected_date : {
       selected_day : -1 ,
@@ -69,6 +75,10 @@ export const store = new Vuex.Store({
       return state.selected_time;
     },
 
+    //selected_bus_details
+    selected_bus_detail : state => {
+      return state.selected_bus_detail;
+    }
 
   },
   //getters

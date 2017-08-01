@@ -4,7 +4,7 @@
       <v-card class="white lighten-4 elevation-3">
         <li v-for="bus in buses_arr">
           {{bus.no}}
-          <button @click="show_bus_route(bus)">route</button>
+          <button @click="route_to_show_bus_route(bus)">route</button>
         </li>
       </v-card>
     </v-container>
@@ -118,44 +118,9 @@ export default{
           }
         })
     },
-    show_bus_route(bus){
-      //console.log("clicking on -> "+bus.no + " "+bus.route_name);
-      this.$http.get('bus_routes/'+bus.route_name+'.json')
-        .then(response => {
-          return response.json();
-        })
-        .then(show_route => {
-          let x = bus.no.indexOf("-");
-          let str = bus.no.slice(x+1);
-          //console.log("str -> "+str);
-          if(str == 'UP'){
-            //console.log("UP");
-            for(let r in show_route){
-              if(this.$store.state.selected_source.name == show_route[r]){
-                console.log("source -> " + show_route[r]);
-                continue;
-              }
-              if(this.$store.state.selected_destination.name == show_route[r]){
-                console.log("destination -> " + show_route[r]);
-                continue;
-              }
-              console.log(show_route[r]);
-            }
-          }else if(str == 'DN'){
-            //console.log("DN");
-            for(let r = show_route.length(); r >= 0; r-- ){
-              if(this.$store.state.selected_source.name == show_route[r]){
-                console.log("source -> " + show_route[r]);
-                continue;
-              }
-              if(this.$store.state.selected_destination.name == show_route[r]){
-                console.log("destination -> " + show_route[r]);
-                continue;
-              }
-              console.log(show_route[r]);
-            }
-          }
-        })
+    route_to_show_bus_route(bus){
+       this.$store.state.selected_bus_detail = bus ;
+       this.$router.push("/direct_bus_route");
     }
   },
   computed:{
