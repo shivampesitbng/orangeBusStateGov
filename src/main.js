@@ -14,7 +14,8 @@ Vue.directive('ripple', Ripple);
 Vue.use(VueFire)
 Vue.use(VueResource);
 
-Vue.http.options.root='https://orangebusv1-38083.firebaseio.com/';
+var state = 'rajasthan';
+Vue.http.options.root='https://orangebusv1-38083.firebaseio.com/'+state+ '/';
 
 Vue.config.productionTip = false
 
