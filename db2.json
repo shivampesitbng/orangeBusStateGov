@@ -26,7 +26,8 @@
 			"DELHI": {
 				"JAIPUR": ["DELHI-UDAIPUR", "DELHI-KOTA"],
 				"AJMER": ["DELHI-UDAIPUR"],
-				"UDAIPUR": ["DELHI-UDAIPUR"]
+				"UDAIPUR": ["DELHI-UDAIPUR"],
+        "KOTA":["DELHI-KOTA"]
 			},
 			"AJMER": {
 				"DELHI": ["UDAIPUR-DELHI"],
