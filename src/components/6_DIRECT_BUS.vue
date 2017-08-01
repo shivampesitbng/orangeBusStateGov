@@ -2,7 +2,10 @@
   <div>
     <v-container fluid id="main">
       <v-card class="white lighten-4 elevation-3">
-        <li v-for="bus in buses_arr" @click="show_bus_route(bus)">{{bus.no}}</li>
+        <li v-for="bus in buses_arr">
+          {{bus.no}}
+          <button @click="show_bus_route(bus)">route</button>
+        </li>
       </v-card>
     </v-container>
   </div>
@@ -18,7 +21,8 @@ export default{
   data(){
     return{
       bus_obj :{
-        no : ''
+        no : '',
+        route_name : ''
       },
       buses_arr : []
     }
@@ -63,7 +67,8 @@ export default{
                 //console.log("bus_day -> "+bus_day);
                 if(bus_day != null){
                   this.bus_obj = {
-                    no : buses_up[i]+"-UP"
+                    no : buses_up[i]+"-UP" ,
+                    route_name : bus_route
                   } //** bus on that day
                   this.buses_arr.push(this.bus_obj);
                 }
@@ -74,9 +79,9 @@ export default{
           //console.log("_pehle -> "+bus_route);
           let x = bus_route.indexOf("-");
           //console.log("index of '-' ->" + x);
-          var str2 = bus_route.slice(x+1);
+          let str2 = bus_route.slice(x+1);
           //console.log(str2);
-          var str1 = bus_route.slice(0,x);
+          let str1 = bus_route.slice(0,x);
           //console.log(str1);
           var str3 = str2 + '-' + str1;
           //console.log("_baad me -> "+str3);
@@ -102,7 +107,8 @@ export default{
                       //console.log("bus_day -> "+bus_day);
                       if(bus_day != null){
                         this.bus_obj = {
-                          no : buses_dn[i]+"-DN"
+                          no : buses_dn[i]+"-DN" ,
+                          route_name : bus_route
                         } //** bus on that day
                         this.buses_arr.push(this.bus_obj);
                       }
@@ -113,7 +119,43 @@ export default{
         })
     },
     show_bus_route(bus){
-      console.log("clicking on -> "+bus.no);
+      //console.log("clicking on -> "+bus.no + " "+bus.route_name);
+      this.$http.get('bus_routes/'+bus.route_name+'.json')
+        .then(response => {
+          return response.json();
+        })
+        .then(show_route => {
+          let x = bus.no.indexOf("-");
+          let str = bus.no.slice(x+1);
+          //console.log("str -> "+str);
+          if(str == 'UP'){
+            //console.log("UP");
+            for(let r in show_route){
+              if(this.$store.state.selected_source.name == show_route[r]){
+                console.log("source -> " + show_route[r]);
+                continue;
+              }
+              if(this.$store.state.selected_destination.name == show_route[r]){
+                console.log("destination -> " + show_route[r]);
+                continue;
+              }
+              console.log(show_route[r]);
+            }
+          }else if(str == 'DN'){
+            //console.log("DN");
+            for(let r = show_route.length(); r >= 0; r-- ){
+              if(this.$store.state.selected_source.name == show_route[r]){
+                console.log("source -> " + show_route[r]);
+                continue;
+              }
+              if(this.$store.state.selected_destination.name == show_route[r]){
+                console.log("destination -> " + show_route[r]);
+                continue;
+              }
+              console.log(show_route[r]);
+            }
+          }
+        })
     }
   },
   computed:{
