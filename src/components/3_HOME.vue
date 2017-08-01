@@ -61,6 +61,7 @@
 
 <script>
 
+
 import {mapGetters} from 'vuex'
 import {mapMutations} from 'vuex'
 
@@ -89,9 +90,6 @@ export default {
       this.test_var_2 = this.$store.state.test_var ; // accessing from mapGetter
       console.log(this.test_var_2);
     },
-    show_hide_footer(){
-      document.getElementById('home_footer').style.visibility = 'visible';
-    }
   },
   //methods ends
 
@@ -107,7 +105,6 @@ export default {
   //functions inside will be called when page is loaded
   beforeMount() {
     this.test_method();
-    this.show_hide_footer();
   },
   //mounted ends
 

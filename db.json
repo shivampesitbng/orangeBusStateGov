@@ -1,112 +1,12 @@
 {
 	"rajasthan": {
-		"cities_&_stops": {
+		"cities": {
 			"D": ["DELHI"],
 			"J": ["JAIPUR"],
 			"A": ["AJMER", "MOUNT ABU"],
 			"K": ["KOTA"],
 			"U": ["UDAIPUR"],
 			"M": ["MOUNT ABU"]
-		},
-    "cities_&_stops_lat_&_lng":{
-      "DELHI":["",""],
-      "JAIPUR":["",""],
-      "AJMER":["",""],
-      "KOTA":["",""],
-      "UDAIPUR":["",""],
-      "MOUNT ABU":["",""]
-    },
-		"bus_routes": {
-			"DELHI-UDAIPUR": ["DELHI", "JAIPUR", "AJMER", "UDAIPUR"],
-			"DELHI-KOTA": ["DELHI", "JAIPUR", "KOTA"],
-			"JAIPUR-UDAIPUR": ["JAIPUR", "AJMER", "UDAIPUR"],
-			"KOTA-MOUNT ABU": ["KOTA", "UDAIPUR", "MOUNT ABU"]
-		},
-		"city_route_matrix": {
-			"DELHI": {
-				"JAIPUR": ["DELHI-UDAIPUR", "DELHI-KOTA"],
-				"AJMER": ["DELHI-UDAIPUR"],
-				"UDAIPUR": ["DELHI-UDAIPUR"]
-			},
-			"AJMER": {
-				"DELHI": ["UDAIPUR-DELHI"],
-				"JAIPUR": ["UDAIPUR-JAIPUR"],
-				"UDAIPUR": ["UDAIPUR-DELHI", "UDAIPUR-JAIPUR"]
-			},
-			"UDAIPUR": {
-				"DELHI": ["UDAIPUR-DELHI"],
-				"AJMER": ["UDAIPUR-DELHI", "UDAIPUR-JAIPUR"],
-				"KOTA": ["MOUNT ABU-KOTA"],
-				"JAIPUR": ["UDAIPUR-JAIPUR", "UDAIPUR-DELHI"]
-			},
-			"KOTA": {
-				"DELHI": ["KOTA-DELHI"],
-				"JAIPUR": ["KOTA-DELHI"],
-				"UDAIPUR": ["KOTA-MOUNT ABU"],
-				"MOUNT ABU": ["KOTA-MOUNT ABU"]
-			},
-			"MOUNT ABU": {
-				"KOTA": ["MOUNT ABU-KOTA"],
-				"UDAIPUR": ["MOUNT ABU-KOTA"]
-			}
-		},
-		"buses_on_route": {
-			"DELHI-UDAIPUR": ["3456", "2894"],
-			"DELHI-KOTA": ["7643"],
-			"JAIPUR-UDAIPUR": ["5674"],
-			"KOTA-MOUNT ABU": ["9087"]
-		},
-		"bus_day_&_time_from_origin": {
-			"3456-UP": {
-				"M": ["5:00", "6:00"],
-				"TU": ["6:00"],
-				"W": ["9:00"]
-			},
-			"3456-DN": {
-				"T": ["12:00"],
-				"F": ["14:00"],
-				"SA": ["18:00"]
-			},
-			"2894-UP": {
-				"T": ["5:00", "6:00"],
-				"TH": ["6:00"],
-				"F": ["9:00"]
-			},
-			"2894-DN": {
-				"W": ["12:00"],
-				"F": ["12:00", "14:00"],
-				"SA": ["18:00"]
-			},
-			"7643-UP": {
-				"SU": ["5:00", "5:00"],
-				"TU": ["5:00"]
-			},
-			"7643-DN": {
-				"M": ["12:00", "14:00"],
-				"W": ["18:00"]
-			},
-			"9087-UP": {
-				"W": ["5:00"],
-				"SA": ["6:00", "9:00"]
-			},
-			"9087-DN": {
-				"TH": ["14:00", "18:00"],
-				"SU": ["14:00"]
-			}
-		},
-    "bus_stops__in_between_travel_time" : {
-      "3456": [150,100,300,200],
-			"2894": [100,200,220,200],
-			"7643": [100,160,200],
-			"5674": [200,100,210],
-      "9087":[200,260,250]
-    },
-    "bus_stops_in_between_distance":{
-      "3456": [100,200,100,100],
-			"2894": [100,200,100,150],
-			"5674": [100,170,200],
-      "7643": [130,140,180],
-      "9087":[180,100,200]
-    }
+		}
 	}
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--p>{{search_city_name}}</p-->
-    <v-container fluid id="main">
+    <v-container fluid >
       <v-card class="white lighten-4 elevation-3" >
         <v-card-text>
           <v-layout row>
@@ -40,7 +40,6 @@ import {mapMutations} from 'vuex'
 import Firebase from 'firebase'
 
 
-
 export default {
 
   data(){
@@ -57,9 +56,6 @@ export default {
     ...mapMutations([
 
     ]),
-    show_hide_footer(){
-      document.getElementById('home_footer').style.visibility = 'hidden';
-    },
     search_city_function(){
       //console.log(this.search_city_name[0]);
       if(this.search_city_name[0] == undefined){
@@ -68,7 +64,7 @@ export default {
         }
         return;
       }
-      this.$http.get('cities_&_stops/' + this.search_city_name[0].toUpperCase() + '.json' )
+      this.$http.get('rajasthan/cities/' + this.search_city_name[0].toUpperCase() + '.json' )
         .then(response => {
           this.cities_array = [];
           return response.json();
@@ -125,7 +121,6 @@ export default {
     }
   },
   mounted(){
-    this.show_hide_footer();
     this.$refs.search.focus();
   },
   firebase : {
@@ -141,7 +136,5 @@ export default {
 .hide_city_name{
   display : none;
 }
-#main{
-  margin-top:-10%;
-}
+
 </style>
