@@ -1,12 +1,20 @@
 {
 	"rajasthan": {
-		"cities": {
+		"cities_&_stops": {
 			"D": ["DELHI"],
 			"J": ["JAIPUR"],
 			"A": ["AJMER", "MOUNT ABU"],
 			"K": ["KOTA"],
 			"U": ["UDAIPUR"],
 			"M": ["MOUNT ABU"]
+		},
+		"cities_&_stops_lat_&_lng": {
+			"DELHI": ["", ""],
+			"JAIPUR": ["", ""],
+			"AJMER": ["", ""],
+			"KOTA": ["", ""],
+			"UDAIPUR": ["", ""],
+			"MOUNT ABU": ["", ""]
 		},
 		"bus_routes": {
 			"DELHI-UDAIPUR": ["DELHI", "JAIPUR", "AJMER", "UDAIPUR"],
@@ -48,7 +56,7 @@
 			"JAIPUR-UDAIPUR": ["5674"],
 			"KOTA-MOUNT ABU": ["9087"]
 		},
-		"bus_day_&_time": {
+		"bus_day_&_time_from_origin": {
 			"3456-UP": {
 				"M": ["5:00", "6:00"],
 				"TU": ["6:00"],
@@ -86,14 +94,14 @@
 				"SU": ["14:00"]
 			}
 		},
-		"bus_stops_travel_time": {
+		"bus_stops__in_between_travel_time": {
 			"3456": [150, 100, 300, 200],
 			"2894": [100, 200, 220, 200],
 			"7643": [100, 160, 200],
 			"5674": [200, 100, 210],
 			"9087": [200, 260, 250]
 		},
-		"bus_stops_distance": {
+		"bus_stops_in_between_distance": {
 			"3456": [100, 200, 100, 100],
 			"2894": [100, 200, 100, 150],
 			"5674": [100, 170, 200],
