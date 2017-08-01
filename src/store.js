@@ -31,7 +31,8 @@ export const store = new Vuex.Store({
     selected_date : {
       selected_day : -1 ,
       selected_month : -1 ,
-      selected_year : -1
+      selected_year : -1 ,
+      day_in_week : 'W' // by default to test further
     },
     selected_time : {
       selected_day : -1 ,

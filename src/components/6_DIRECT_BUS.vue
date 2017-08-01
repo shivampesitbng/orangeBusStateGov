@@ -1,5 +1,11 @@
 <template>
-
+  <div>
+    <v-container fluid id="main">
+      <v-card class="white lighten-4 elevation-3">
+        <li v-for="bus in buses_arr" @click="show_bus_route(bus)">{{bus.no}}</li>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -11,7 +17,10 @@ import {mapMutations} from 'vuex'
 export default{
   data(){
     return{
-
+      bus_obj :{
+        no : ''
+      },
+      buses_arr : []
     }
   },
   methods:{
@@ -41,9 +50,26 @@ export default{
         })
         .then(buses_up => {
           //console.log("up -> " + buses_up);
-          for(var i in buses_up){
-            console.log(buses_up[i]+"-UP"); //** buses-up
+          for(let i in buses_up){
+            //console.log(buses_up[i]+"-UP"); //** buses-up
+            this.$http.get('bus_day_&_time_from_origin/'+
+              buses_up[i]+'-UP'+'/'+
+              this.$store.state.selected_date.day_in_week+
+              '.json')
+              .then(response=>{
+                return response.json();
+              })
+              .then(bus_day => {
+                //console.log("bus_day -> "+bus_day);
+                if(bus_day != null){
+                  this.bus_obj = {
+                    no : buses_up[i]+"-UP"
+                  } //** bus on that day
+                  this.buses_arr.push(this.bus_obj);
+                }
+              })
           }
+
           //
           //console.log("_pehle -> "+bus_route);
           let x = bus_route.indexOf("-");
@@ -55,6 +81,7 @@ export default{
           var str3 = str2 + '-' + str1;
           //console.log("_baad me -> "+str3);
           //
+
           if(buses_up == null){
             this.$http.get('buses_on_route/'+str3+'.json')
               .then(response => {
@@ -63,16 +90,35 @@ export default{
               .then(buses_dn => {
                 //console.log("dn -> "+buses_dn);
                 for(let i in buses_dn){
-                  console.log(buses_dn[i]+"-DN"); //** buses-dn
+                  //console.log(buses_dn[i]+"-DN"); //** buses-dn
+                  this.$http.get('bus_day_&_time_from_origin/'+
+                    buses_dn[i]+'-DN'+'/'+
+                    this.$store.state.selected_date.day_in_week+
+                    '.json')
+                    .then(response => {
+                      return response.json();
+                    })
+                    .then(bus_day => {
+                      //console.log("bus_day -> "+bus_day);
+                      if(bus_day != null){
+                        this.bus_obj = {
+                          no : buses_dn[i]+"-DN"
+                        } //** bus on that day
+                        this.buses_arr.push(this.bus_obj);
+                      }
+                    })
                 }
               })
-            }
+          }
         })
+    },
+    show_bus_route(bus){
+      console.log("clicking on -> "+bus.no);
     }
   },
   computed:{
     ...mapGetters([
-      'selected_source','selected_destination'
+      'selected_source','selected_destination','selected_date'
     ])
   },
   beforeMount(){
@@ -82,4 +128,7 @@ export default{
 
 </script>
 <style scoped>
+#main{
+  margin-top:-10%;
+}
 </style>

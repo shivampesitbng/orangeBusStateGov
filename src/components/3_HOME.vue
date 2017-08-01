@@ -78,7 +78,6 @@ export default {
   data () {
     return {
       test_var_2:'',
-
     }
   },
   //data ends
