@@ -98,7 +98,7 @@ export default {
       }
     },
     select_city(selected_city_name){
-      console.log(selected_city_name);
+      //console.log(selected_city_name);
       if(this.$store.state.source_input_selected == true && this.$store.state.destination_input_selected == false ){
         this.$store.state.selected_source = {
           name : selected_city_name

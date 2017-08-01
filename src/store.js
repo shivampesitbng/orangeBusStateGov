@@ -84,12 +84,12 @@ export const store = new Vuex.Store({
     select_source_input : state => {
       state.source_input_selected = true ;
       state.destination_input_selected = false ;
-      console.log("from store => source is selected");
+      //console.log("from store => source is selected");
     },
     select_destination_input : state => {
       state.source_input_selected = false ;
       state.destination_input_selected = true ;
-      console.log("from store => destination is selected");
+      //console.log("from store => destination is selected");
     },
 
     //select date & time function -> cz we have to change it from filter also

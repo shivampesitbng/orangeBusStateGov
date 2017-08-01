@@ -18,13 +18,9 @@
 		},
 		"bus_routes": {
 			"DELHI-UDAIPUR": ["DELHI", "JAIPUR", "AJMER", "UDAIPUR"],
-			"UDAIPUR-DELHI": ["UDAIPUR", "AJMER", "JAIPUR", "DELHI"],
 			"DELHI-KOTA": ["DELHI", "JAIPUR", "KOTA"],
-			"KOTA-DELHI": ["KOTA", "JAIPUR", "DELHI"],
 			"JAIPUR-UDAIPUR": ["JAIPUR", "AJMER", "UDAIPUR"],
-			"UDAIPUR-JAIPUR": ["UDAIPUR", "AJMER", "JAIPUR"],
-			"KOTA-MOUNT ABU": ["KOTA", "UDAIPUR", "MOUNT ABU"],
-			"MOUNT ABU-KOTA": ["MOUNT ABU", "UDAIPUR", "KOTA"]
+			"KOTA-MOUNT ABU": ["KOTA", "UDAIPUR", "MOUNT ABU"]
 		},
 		"city_route_matrix": {
 			"DELHI": {
@@ -55,14 +51,10 @@
 			}
 		},
 		"buses_on_route": {
-			"DELHI-UDAIPUR": ["3456-UP", "2894-UP"],
-			"UDAIPUR-DELHI": ["3456-DN", "2894-DN"],
-			"DELHI-KOTA": ["7643-UP"],
-			"KOTA-DELHI": ["7643-DN"],
-			"JAIPUR-UDAIPUR": ["5674-UP"],
-			"UDAIPUR-JAIPUR": ["5674-DN"],
-			"KOTA-MOUNT ABU": ["9087-UP"],
-			"MOUNT ABU-KOTA": ["9087-DN"]
+			"DELHI-UDAIPUR": ["3456", "2894"],
+			"DELHI-KOTA": ["7643"],
+			"JAIPUR-UDAIPUR": ["5674"],
+			"KOTA-MOUNT ABU": ["9087"]
 		},
 		"bus_day_&_time_from_origin": {
 			"3456-UP": {

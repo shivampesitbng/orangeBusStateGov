@@ -44,9 +44,11 @@
 
       </v-card >
 
-      <v-btn primary fab  dark style="margin-top:10%;">
-        <v-icon>&#xE409</v-icon>
-      </v-btn>
+      <router-link to="/direct_bus">
+        <v-btn primary fab  dark style="margin-top:10%;">
+          <v-icon>&#xE409</v-icon>
+        </v-btn>
+      </router-link>
 
 
     </v-container fluid>
@@ -88,7 +90,7 @@ export default {
     ]),
     test_method(){
       this.test_var_2 = this.$store.state.test_var ; // accessing from mapGetter
-      console.log(this.test_var_2);
+      //console.log(this.test_var_2);
     },
   },
   //methods ends
