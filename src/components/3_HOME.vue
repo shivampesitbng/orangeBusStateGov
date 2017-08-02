@@ -44,12 +44,12 @@
 
       </v-card >
 
-      <!--router-link to="/direct_bus"-->
-        <v-btn primary fab  dark style="margin-top:10%;"
-          @click="go_to_direct_bus_comp">
-          <v-icon>&#xE409</v-icon>
-        </v-btn>
-      <!--/router-link-->
+
+      <v-btn primary fab  dark style="margin-top:10%;"
+        @click="find_bus(get_bus_on_this_route)">
+        <v-icon>&#xE409</v-icon>
+      </v-btn>
+
 
 
     </v-container fluid>
@@ -86,24 +86,14 @@ export default {
   //functions
   methods:{
     ...mapMutations([
-      'test_function' //getting function from store
+      'find_bus','get_bus_on_this_route'
     ]),
     test_method(){
       this.test_var_2 = this.$store.state.test_var ; // accessing from mapGetter
       //console.log(this.test_var_2);
+      //console.log(this.$store.state.get_bus_on_this_route);
+      //console.log(this.$store.state.check_day);
     },
-    go_to_direct_bus_comp(){
-      console.log("going to direct bus");
-      if(this.$store.state.selected_source.name == 'City Name'  ||
-        this.$store.state.selected_destination.name == 'City Name'){
-        console.log("source or destination cannot be empty"); //** snackbar
-      }else if(this.$store.state.selected_source.name ==
-        this.$store.state.selected_destination.name){
-        console.log("source & destination cannot be same"); //** snackbar
-      }else{
-        this.$router.push("/direct_bus");
-      }
-    }
   },
   //methods ends
 
@@ -111,14 +101,14 @@ export default {
     by changing the other variables dependent on the changed one => must return something */
   computed:{
       ...mapGetters([
-        'test_var'  // getting variable from store
+        'selected_date'
       ]),
   },
   //computed ends
 
   //functions inside will be called when page is loaded
   beforeMount() {
-    this.test_method();
+    //this.test_method();
   },
   //mounted ends
 

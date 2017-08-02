@@ -17,51 +17,79 @@
 			"MOUNT ABU": ["", ""]
 		},
 		"bus_routes": {
-			"DELHI-UDAIPUR": ["DELHI", "JAIPUR", "AJMER", "UDAIPUR"],
-			"DELHI-KOTA": ["DELHI", "JAIPUR", "KOTA"],
-			"JAIPUR-UDAIPUR": ["JAIPUR", "AJMER", "UDAIPUR"],
-			"KOTA-MOUNT ABU": ["KOTA", "UDAIPUR", "MOUNT ABU"]
+			"DELHI-UDAIPUR-VIA-AJMER": ["DELHI", "JAIPUR", "AJMER", "UDAIPUR"],
+			"UDAIPUR-DELHI-VIA-AJMER":["UDAIPUR","AJMER","JAIPUR","DELHI"],
+			"DELHI-KOTA-VIA-JAIPUR": ["DELHI", "JAIPUR", "KOTA"],
+			"KOTA-DELHI-VIA-JAIPUR":["KOTA","JAIPUR","DELHI"],
+			"JAIPUR-UDAIPUR-VIA-AJMER": ["JAIPUR", "AJMER", "UDAIPUR"],
+			"UDAIPUR-JAIPUR-VIA-AJMER":["UDAIPUR","AJMER","JAIPUR"],
+			"KOTA-MOUNT ABU-VIA-UDAIPUR": ["KOTA", "UDAIPUR", "MOUNT ABU"],
+			"MOUNT ABU-KOTA-VIA-UDAIPUR":["MOUNT ABU","UDAIPUR","KOTA"]
+		},
+		"distance_between_stops_on_route":{
+			"DELHI-UDAIPUR-VIA-AJMER": [100,150,160],
+			"UDAIPUR-DELHI-VIA-AJMER":[160,150,100],
+			"DELHI-KOTA-VIA-JAIPUR": [100,200],
+			"KOTA-DELHI-VIA-JAIPUR":[200,100],
+			"JAIPUR-UDAIPUR-VIA-AJMER": [150,160],
+			"UDAIPUR-JAIPUR-VIA-AJMER":[160,150],
+			"KOTA-MOUNT ABU-VIA-UDAIPUR": [90,20],
+			"MOUNT ABU-KOTA-VIA-UDAIPUR":[20,90]
+		},
+		"travel_time_between_stops_on_route":{
+			"DELHI-UDAIPUR-VIA-AJMER": [50,75,80],
+			"UDAIPUR-DELHI-VIA-AJMER":[80,75,50],
+			"DELHI-KOTA-VIA-JAIPUR": [50,100],
+			"KOTA-DELHI-VIA-JAIPUR":[100,50],
+			"JAIPUR-UDAIPUR-VIA-AJMER": [75,80],
+			"UDAIPUR-JAIPUR-VIA-AJMER":[80,75],
+			"KOTA-MOUNT ABU-VIA-UDAIPUR": [45,10],
+			"MOUNT ABU-KOTA-VIA-UDAIPUR":[10,45]
 		},
 		"city_route_matrix": {
 			"DELHI": {
-				"JAIPUR": ["DELHI-UDAIPUR", "DELHI-KOTA"],
-				"AJMER": ["DELHI-UDAIPUR"],
-				"UDAIPUR": ["DELHI-UDAIPUR"],
-				"KOTA": ["DELHI-KOTA"]
+				"JAIPUR": ["DELHI-UDAIPUR-VIA-AJMER", "DELHI-KOTA-VIA-JAIPUR"],
+				"AJMER": ["DELHI-UDAIPUR-VIA-AJMER"],
+				"UDAIPUR": ["DELHI-UDAIPUR-VIA-AJMER"],
+				"KOTA": ["DELHI-KOTA-VIA-JAIPUR"]
 			},
 			"JAIPUR":{
-				"DELHI": ["UDAIPUR-DELHI", "KOTA-DELHI"],
-				"AJMER": ["DELHI-UDAIPUR"],
-				"UDAIPUR": ["DELHI-UDAIPUR","JAIPUR-UDAIPUR"],
-				"KOTA": ["DELHI-KOTA"]
+				"DELHI": ["UDAIPUR-DELHI-VIA-AJMER", "KOTA-DELHI-VIA-JAIPUR"],
+				"AJMER": ["DELHI-UDAIPUR-VIA-AJMER"],
+				"UDAIPUR": ["DELHI-UDAIPUR-VIA-AJMER","JAIPUR-UDAIPUR-VIA-AJMER"],
+				"KOTA": ["DELHI-KOTA-VIA-JAIPUR"]
 			},
 			"AJMER": {
-				"DELHI": ["UDAIPUR-DELHI"],
-				"JAIPUR": ["UDAIPUR-JAIPUR"],
-				"UDAIPUR": ["DELHI-UDAIPUR", "JAIPUR-UDAIPUR"]
+				"DELHI": ["UDAIPUR-DELHI-VIA-AJMER"],
+				"JAIPUR": ["UDAIPUR-JAIPUR-VIA-AJMER"],
+				"UDAIPUR": ["DELHI-UDAIPUR-VIA-AJMER", "JAIPUR-UDAIPUR-VIA-AJMER"]
 			},
 			"UDAIPUR": {
-				"DELHI": ["UDAIPUR-DELHI"],
-				"AJMER": ["UDAIPUR-DELHI", "UDAIPUR-JAIPUR"],
-				"KOTA": ["MOUNT ABU-KOTA"],
-				"JAIPUR": ["UDAIPUR-JAIPUR", "UDAIPUR-DELHI"]
+				"DELHI": ["UDAIPUR-DELHI-VIA-AJMER"],
+				"AJMER": ["UDAIPUR-DELHI-VIA-AJMER", "UDAIPUR-JAIPUR-VIA-AJMER"],
+				"KOTA": ["MOUNT ABU-KOTA-VIA-UDAIPUR"],
+				"JAIPUR": ["UDAIPUR-JAIPUR-VIA-AJMER", "UDAIPUR-DELHI-VIA-AJMER"]
 			},
 			"KOTA": {
-				"DELHI": ["KOTA-DELHI"],
-				"JAIPUR": ["KOTA-DELHI"],
-				"UDAIPUR": ["KOTA-MOUNT ABU"],
-				"MOUNT ABU": ["KOTA-MOUNT ABU"]
+				"DELHI": ["KOTA-DELHI-VIA-JAIPUR"],
+				"JAIPUR": ["KOTA-DELHI-VIA-JAIPUR"],
+				"UDAIPUR": ["KOTA-MOUNT ABU-VIA-UDAIPUR"],
+				"MOUNT ABU": ["KOTA-MOUNT ABU-VIA-UDAIPUR"]
 			},
 			"MOUNT ABU": {
-				"KOTA": ["MOUNT ABU-KOTA"],
-				"UDAIPUR": ["MOUNT ABU-KOTA"]
+				"KOTA": ["MOUNT ABU-KOTA-VIA-UDAIPUR"],
+				"UDAIPUR": ["MOUNT ABU-KOTA-VIA-UDAIPUR"]
 			}
 		},
 		"buses_on_route": {
-			"DELHI-UDAIPUR": ["3456", "2894"],
-			"DELHI-KOTA": ["7643"],
-			"JAIPUR-UDAIPUR": ["5674"],
-			"KOTA-MOUNT ABU": ["9087"]
+			"DELHI-UDAIPUR-VIA-AJMER": ["3456-Y", "2894-Y"],
+			"UDAIPUR-DELHI-VIA-AJMER":["3456-Z", "2894-Z"],
+			"DELHI-KOTA-VIA-JAIPUR": ["7643-Y"],
+			"KOTA-DELHI-VIA-JAIPUR": ["7643-Z"],
+			"JAIPUR-UDAIPUR-VIA-AJMER": ["5674-Y"],
+			"UDAIPUR-JAIPUR-VIA-AJMER": ["5674-Z"],
+			"KOTA-MOUNT ABU-VIA-UDAIPUR": ["9087-Y"],
+			"MOUNT ABU-KOTA-VIA-UDAIPUR": ["9087-Z"]
 		},
 		"bus_day_&_time_from_origin": {
 			"3456-Y": {
@@ -106,26 +134,17 @@
 				"W": ["18:00"]
 			}
 		},
-		"bus_travel_time_in_between_stops": {
-			"3456": [150, 100, 300],
-			"2894": [100, 200, 220],
-			"7643": [100, 160],
-			"5674": [200, 100],
-			"9087": [200, 260]
-		},
-		"bus_travel_distance_in_between_stops": {
-			"3456": [100, 200, 400],
-			"2894": [100, 200, 300],
-			"5674": [100, 170],
-			"7643": [130, 140],
-			"9087": [180, 100]
-		},
     "bus_live_lat_&_lng":{
-      "3456": ["28.612912", "77.227321"],
-			"2894": ["",""],
-			"5674": ["",""],
-			"7643": ["",""],
-			"9087": ["",""]
+      "3456-Y": ["28.612912", "77.227321"],
+			"3456-Z": ["28.612912", "77.227321"],
+			"2894-Y": ["",""],
+			"2894-Z": ["",""],
+			"5674-Y": ["",""],
+			"5674-Z": ["",""],
+			"7643-Y": ["",""],
+			"7643-Z": ["",""],
+			"9087-Y": ["",""],
+			"9087-Z": ["",""]
     }
 	}
 }

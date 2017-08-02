@@ -3,10 +3,14 @@
     <v-container fluid id="main">
       <v-card class="white lighten-4 elevation-3">
 
-        <li v-for="bus in buses_arr">
+        <!--p>direct bus</p-->
+
+        <li v-for="bus in direct_buses">
           {{bus.no}}
-          <button @click="route_to_show_bus_route(bus)">route</button>
+          <button @click="get_route(bus)">route</button>
         </li>
+
+        <p v-if="direct_bus_flg == false && direct_bus_flg_2==true">NO DIRECT BUS ON THIS ROUTE !</p>
 
       </v-card>
     </v-container>
@@ -42,120 +46,37 @@ import {mapMutations} from 'vuex'
 export default{
   data(){
     return{
-      bus_obj :{
-        no : '',
-        route_name : '',
-      },
-      buses_arr : [],
+
     }
   },
   methods:{
     ...mapMutations([
 
     ]),
+
+    /*** go to indirect_bus ***/
     go_to_indirect_bus(){
       //console.log("goign to indirect bus");
       this.$router.push('/indirect_bus');
     },
-    get_bus_routes(callback_get_buses_on_route){
-      this.$http.get('city_route_matrix/'+
-        this.$store.state.selected_source.name + '/' +
-          this.$store.state.selected_destination.name + '.json')
-        .then(response => {
-          return response.json();
-        })
-        .then(bus_routes => {
-          //console.log("bus routes -> " + bus_routes);
-          //callback -> get_buses_on_route
-          for(let i in bus_routes){
-            callback_get_buses_on_route(bus_routes[i]);
-          }
-        });
-    },
-    get_buses_on_route(bus_route){
-      //console.log("calling -> get_buses_on_route -> " + bus_route);
-      this.$http.get('buses_on_route/'+bus_route+'.json')
-        .then(response => {
-          return response.json();
-        })
-        .then(buses_Y => {
-          //console.log("Y -> " + buses_Y);
-          for(let i in buses_Y){
-            //console.log(buses_Y[i]+"-Y"); //** buses-Y
-            this.$http.get('bus_day_&_time_from_origin/'+
-              buses_Y[i]+'-Y'+'/'+
-              this.$store.state.selected_date.day_in_week+
-              '.json')
-              .then(response=>{
-                return response.json();
-              })
-              .then(bus_day => {
-                //console.log("bus_day -> "+bus_day);
-                if(bus_day != null){
-                  this.bus_obj = {
-                    no : buses_Y[i]+"-Y" ,
-                    route_name : bus_route
-                  } //** bus on that day
-                  this.buses_arr.push(this.bus_obj);
-                }
-              })
-          }
+    /*** go to indirect_bus ends ***/
 
-          //
-          //console.log("_pehle -> "+bus_route);
-          let x = bus_route.indexOf("-");
-          //console.log("index of '-' ->" + x);
-          let str2 = bus_route.slice(x+1);
-          //console.log(str2);
-          let str1 = bus_route.slice(0,x);
-          //console.log(str1);
-          var str3 = str2 + '-' + str1;
-          //console.log("_baad me -> "+str3);
-          //
 
-          if(buses_Y == null){
-            this.$http.get('buses_on_route/'+str3+'.json')
-              .then(response => {
-                return response.json();
-              })
-              .then(buses_Z => {
-                //console.log("Z -> "+buses_Z);
-                for(let i in buses_Z){
-                  //console.log(buses_Z[i]+"-Z"); //** buses-Z
-                  this.$http.get('bus_day_&_time_from_origin/'+
-                    buses_Z[i]+'-Z'+'/'+
-                    this.$store.state.selected_date.day_in_week+
-                    '.json')
-                    .then(response => {
-                      return response.json();
-                    })
-                    .then(bus_day => {
-                      //console.log("bus_day -> "+bus_day);
-                      if(bus_day != null){
-                        this.bus_obj = {
-                          no : buses_Z[i]+"-Z" ,
-                          route_name : bus_route
-                        } //** bus on that day
-                        this.buses_arr.push(this.bus_obj);
-                      }
-                    })
-                }
-              })
-          }
-        })
-    },
-    route_to_show_bus_route(bus){
-       this.$store.state.selected_bus_detail = bus ;
-       this.$router.push("/direct_bus_route");
+
+    /*** get_route ***/
+    get_route(bus){
+      console.log(bus.no + " " + bus.route);
     }
+    /*** get_route ENDS***/
+
   },
   computed:{
     ...mapGetters([
-      'selected_source','selected_destination','selected_date'
+      'direct_buses','direct_bus_flg','direct_bus_flg_2','selected_source','selected_destination'
     ])
   },
   beforeMount(){
-    this.get_bus_routes(this.get_buses_on_route);
+
   },
 }
 
