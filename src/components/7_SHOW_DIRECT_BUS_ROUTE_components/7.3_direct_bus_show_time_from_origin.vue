@@ -29,7 +29,10 @@ export default{
         .then(time_from_origin=>{
           console.log(time_from_origin); //  origin_time
           console.log("time sum (origin -> src) -> "+time_sum_frm_origin_to_src);
-
+          for(let i in time_from_origin){
+            console.log(time_from_origin[i]);
+            //src_time = cal_src_time(time_from_origin[i], time_sum_frm_origin_to_src);
+          }
         })
     },
   },

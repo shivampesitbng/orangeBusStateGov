@@ -52,12 +52,12 @@ export default{
         .then(response => {
           return response.json();
         })
-        .then(buses_up => {
-          //console.log("up -> " + buses_up);
-          for(let i in buses_up){
-            //console.log(buses_up[i]+"-UP"); //** buses-up
+        .then(buses_Y => {
+          //console.log("Y -> " + buses_Y);
+          for(let i in buses_Y){
+            //console.log(buses_Y[i]+"-Y"); //** buses-Y
             this.$http.get('bus_day_&_time_from_origin/'+
-              buses_up[i]+'-UP'+'/'+
+              buses_Y[i]+'-Y'+'/'+
               this.$store.state.selected_date.day_in_week+
               '.json')
               .then(response=>{
@@ -67,7 +67,7 @@ export default{
                 //console.log("bus_day -> "+bus_day);
                 if(bus_day != null){
                   this.bus_obj = {
-                    no : buses_up[i]+"-UP" ,
+                    no : buses_Y[i]+"-Y" ,
                     route_name : bus_route
                   } //** bus on that day
                   this.buses_arr.push(this.bus_obj);
@@ -87,17 +87,17 @@ export default{
           //console.log("_baad me -> "+str3);
           //
 
-          if(buses_up == null){
+          if(buses_Y == null){
             this.$http.get('buses_on_route/'+str3+'.json')
               .then(response => {
                 return response.json();
               })
-              .then(buses_dn => {
-                //console.log("dn -> "+buses_dn);
-                for(let i in buses_dn){
-                  //console.log(buses_dn[i]+"-DN"); //** buses-dn
+              .then(buses_Z => {
+                //console.log("Z -> "+buses_Z);
+                for(let i in buses_Z){
+                  //console.log(buses_Z[i]+"-Z"); //** buses-Z
                   this.$http.get('bus_day_&_time_from_origin/'+
-                    buses_dn[i]+'-DN'+'/'+
+                    buses_Z[i]+'-Z'+'/'+
                     this.$store.state.selected_date.day_in_week+
                     '.json')
                     .then(response => {
@@ -107,7 +107,7 @@ export default{
                       //console.log("bus_day -> "+bus_day);
                       if(bus_day != null){
                         this.bus_obj = {
-                          no : buses_dn[i]+"-DN" ,
+                          no : buses_Z[i]+"-Z" ,
                           route_name : bus_route
                         } //** bus on that day
                         this.buses_arr.push(this.bus_obj);
