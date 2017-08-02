@@ -8,6 +8,25 @@
         </li>
       </v-card>
     </v-container>
+
+    <!-- footer -->
+      <v-bottom-nav
+        absolute
+        shift
+        value="true"
+        style="background:rgba(0,0,0,0.45);height:55px"
+        id="home_footer"
+        @click="go_to_indirect_bus"
+      >
+
+        <v-btn dark style="color:#fff" >
+          <p style="margin-top:11%;">Find Indirect Bus</p>
+        </v-btn>
+
+
+      </v-bottom-nav>
+    <!-- footer ends -->
+
   </div>
 </template>
 
@@ -22,15 +41,20 @@ export default{
     return{
       bus_obj :{
         no : '',
-        route_name : ''
+        route_name : '',
       },
-      buses_arr : []
+      buses_arr : [],
+      e2: 1,
     }
   },
   methods:{
     ...mapMutations([
 
     ]),
+    go_to_indirect_bus(){
+      console.log("goign to indirect bus");
+      this.$router.push('/indirect_bus');
+    },
     get_bus_routes(callback_get_buses_on_route){
       this.$http.get('city_route_matrix/'+
         this.$store.state.selected_source.name + '/' +
@@ -138,4 +162,13 @@ export default{
 #main{
   margin-top:-10%;
 }
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.3s
+}
+
+.fade-enter, .fade-leave-active {
+  opacity: 0
+}
+
 </style>

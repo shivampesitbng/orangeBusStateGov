@@ -44,11 +44,12 @@
 
       </v-card >
 
-      <router-link to="/direct_bus">
-        <v-btn primary fab  dark style="margin-top:10%;">
+      <!--router-link to="/direct_bus"-->
+        <v-btn primary fab  dark style="margin-top:10%;"
+          @click="go_to_direct_bus_comp">
           <v-icon>&#xE409</v-icon>
         </v-btn>
-      </router-link>
+      <!--/router-link-->
 
 
     </v-container fluid>
@@ -91,6 +92,18 @@ export default {
       this.test_var_2 = this.$store.state.test_var ; // accessing from mapGetter
       //console.log(this.test_var_2);
     },
+    go_to_direct_bus_comp(){
+      console.log("going to direct bus");
+      if(this.$store.state.selected_source.name == 'City Name'  ||
+        this.$store.state.selected_destination.name == 'City Name'){
+        console.log("source or destination cannot be empty"); //** snackbar
+      }else if(this.$store.state.selected_source.name ==
+        this.$store.state.selected_destination.name){
+        console.log("source & destination cannot be same"); //** snackbar
+      }else{
+        this.$router.push("/direct_bus");
+      }
+    }
   },
   //methods ends
 
