@@ -18,6 +18,7 @@
         style="background:rgba(0,0,0,0.45);height:55px"
         id="home_footer"
         @click="go_to_direct_bus"
+        elevation-3
       >
 
         <v-btn dark style="color:#fff" >
@@ -39,7 +40,7 @@ import {mapGetters} from 'vuex'
 export default{
   data(){
     return{
-      e2:4,
+
     }
   },
   methods:{
@@ -52,6 +53,7 @@ export default{
     },
     get_indirect_bus(src,dest){
       console.log("get_indirect_bus -> "+ src.name + " to " + dest.name);
+      
     },
   },
   computed:{

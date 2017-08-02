@@ -17,6 +17,7 @@
         style="background:rgba(0,0,0,0.45);height:55px"
         id="home_footer"
         @click="go_to_indirect_bus"
+        elevation-3
       >
 
         <v-btn dark style="color:#fff" >
@@ -44,7 +45,6 @@ export default{
         route_name : '',
       },
       buses_arr : [],
-      e2: 1,
     }
   },
   methods:{
