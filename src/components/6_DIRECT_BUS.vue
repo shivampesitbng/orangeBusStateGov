@@ -2,10 +2,12 @@
   <div>
     <v-container fluid id="main">
       <v-card class="white lighten-4 elevation-3">
+
         <li v-for="bus in buses_arr">
           {{bus.no}}
           <button @click="route_to_show_bus_route(bus)">route</button>
         </li>
+
       </v-card>
     </v-container>
 
@@ -52,7 +54,7 @@ export default{
 
     ]),
     go_to_indirect_bus(){
-      console.log("goign to indirect bus");
+      //console.log("goign to indirect bus");
       this.$router.push('/indirect_bus');
     },
     get_bus_routes(callback_get_buses_on_route){
