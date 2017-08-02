@@ -9,8 +9,8 @@
       <v-card class="white lighten-4 elevation-3 source-destination-input-card">
 
           <show_selected_source ></show_selected_source>
-          <span>
 
+          <span>
             <v-layout row>
 
               <v-flex xs9 >
@@ -19,27 +19,27 @@
 
                   </span>
                 </div>
-                </v-flex>
+              </v-flex>
 
-                <v-flex xs1 >
+              <v-flex xs1 >
                 <div style="width: 100%; margin-top: -10px;margin-bottom:0px;height: 10px; border-bottom: 1px solid grey; ">
                   <span style="font-size: 40px; background-color: #fff; ">
                     <i class="material-icons" >&#xE0C3;</i>
                   </span>
                 </div>
-                </v-flex>
+              </v-flex>
 
-                <v-flex xs2 >
+              <v-flex xs2 >
                 <div style="width: 100%; margin-top: -10px;margin-bottom:0px;height: 10px; border-bottom: 1px solid grey; ">
                   <span style="font-size: 40px; background-color: #fff; ">
 
                   </span>
                 </div>
-
               </v-flex>
-            </v-layout>
 
+            </v-layout>
           </span>
+
           <show_selected_destination ></show_selected_destination>
 
       </v-card >

@@ -3,16 +3,34 @@
     <v-container fluid id="main">
       <v-card class="white lighten-4 elevation-3">
 
-        <li v-for="stop in stop_name_arr">
-          {{stop}}
-        </li>
+        <v-layout row>
+          <direct_bus_show_time_from_origin>
+            </direct_bus_show_time_from_origin>
+        </v-layout>
 
-        <direct_bus_travel_time_in_between_stops>
-        </direct_bus_travel_time_in_between_stops>
+        <v-layout row>
 
-        <direct_bus_travel_distance_in_between_stops>
-        </direct_bus_travel_distance_in_between_stops>
+          <v-flex xs4 >
+            <li v-for="stop in stop_name_arr">
+              {{stop}}
+            </li>
+          </v-flex>
 
+          <v-flex xs4 >
+            <span v-if="stop_name_arr.length > 0">
+              <direct_bus_travel_time_in_between_stops>
+              </direct_bus_travel_time_in_between_stops>
+            </span>
+          </v-flex>
+
+          <v-flex xs4 >
+            <span v-if="stop_name_arr.length > 0">
+              <direct_bus_travel_distance_in_between_stops>
+              </direct_bus_travel_distance_in_between_stops>
+            </span>
+          </v-flex >
+
+        </v-layout>
       </v-card>
     </v-container>
   </div>
@@ -24,6 +42,8 @@ import direct_bus_travel_time_in_between_stops from
   './7_SHOW_DIRECT_BUS_ROUTE_components/7.1_direct_bus_travel_time_in_between_stops'
 import direct_bus_travel_distance_in_between_stops from
     './7_SHOW_DIRECT_BUS_ROUTE_components/7.2_direct_bus_travel_distance_in_between_stops'
+import direct_bus_show_time_from_origin from
+    './7_SHOW_DIRECT_BUS_ROUTE_components/7.3_direct_bus_show_time_from_origin'
 
 import {mapGetters} from 'vuex'
 import {mapMutations} from 'vuex'
@@ -47,6 +67,7 @@ export default{
         })
         .then(show_route => {
           //console.log("show_route -> "+show_route);
+          this.$store.state.selected_bus_detail.route = show_route ;
           if(show_route == null){
 
             //
@@ -68,14 +89,15 @@ export default{
               })
               .then(show_route=>{
                 console.log(show_route);
+                this.$store.state.selected_bus_detail.route = show_route ;
 
                 //
                 let x = bus.no.indexOf("-");
                 let str = bus.no.slice(x+1);
                 //console.log("str -> "+str);
 
-                if(str == 'UP'){
-                  //console.log("UP");
+                if(str == 'Y'){
+                  //console.log("Y");
                   let src_flg = false , dest_flg = false ;
                   for(let r in show_route){
                     if(this.$store.state.selected_source.name == show_route[r]){
@@ -97,8 +119,8 @@ export default{
                       this.stop_name_arr.push(show_route[r]);
                     }
                   }
-                }else if(str == 'DN'){
-                  //console.log("DN");
+                }else if(str == 'Z'){
+                  console.log("Z3");
                   let src_flg = false , dest_flg = false ;
                   for(let r = show_route.length-1; r >= 0; r-- ){
                     if(this.$store.state.selected_source.name == show_route[r]){
@@ -130,8 +152,8 @@ export default{
             let str = bus.no.slice(x+1);
             //console.log("str -> "+str);
 
-            if(str == 'UP'){
-              //console.log("UP");
+            if(str == 'Y'){
+              //console.log("Y");
               let src_flg = false , dest_flg = false ;
               for(let r in show_route){
                 if(this.$store.state.selected_source.name == show_route[r]){
@@ -153,8 +175,8 @@ export default{
                   this.stop_name_arr.push(show_route[r]);
                 }
               }
-            }else if(str == 'DN'){
-              //console.log("DN");
+            }else if(str == 'Z'){
+              console.log("Z2");
               let src_flg = false , dest_flg = false ;
               for(let r = show_route.length; r >= 0; r-- ){
                 if(this.$store.state.selected_source.name == show_route[r]){
@@ -188,7 +210,8 @@ export default{
   },
   components :{
     'direct_bus_travel_time_in_between_stops':direct_bus_travel_time_in_between_stops,
-    'direct_bus_travel_distance_in_between_stops':direct_bus_travel_distance_in_between_stops
+    'direct_bus_travel_distance_in_between_stops':direct_bus_travel_distance_in_between_stops,
+    'direct_bus_show_time_from_origin' : direct_bus_show_time_from_origin
   },
   beforeMount(){
     this.show_bus_route(this.$store.state.selected_bus_detail);

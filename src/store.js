@@ -30,8 +30,11 @@ export const store = new Vuex.Store({
     //selected bus -> details
     selected_bus_detail :{
       no : '',
-      route : ''
+      route_name : '',
+      route : []
     },
+
+
 
     //objects -> details of selected date & time
     selected_date : {
@@ -48,6 +51,8 @@ export const store = new Vuex.Store({
 
     //array of objects -> to show details of recent searche(s).
     recent_searches :  [],
+
+    time_sum_frm_origin_to_src : -1 ,
 
 
   },
@@ -78,7 +83,13 @@ export const store = new Vuex.Store({
     //selected_bus_details
     selected_bus_detail : state => {
       return state.selected_bus_detail;
+    },
+
+    //travel time origin to source
+    time_sum_frm_origin_to_src : state => {
+      return state.time_sum_frm_origin_to_src;
     }
+
 
   },
   //getters
