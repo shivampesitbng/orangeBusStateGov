@@ -47,7 +47,7 @@
 
 
       <v-btn primary fab  dark style="margin-top:10%;"
-        @click="find_bus(get_bus_on_this_route)">
+        @click="find_bus(get_bus_on_this_route);">
         <v-icon>&#xE409</v-icon>
       </v-btn>
 

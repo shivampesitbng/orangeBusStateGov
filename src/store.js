@@ -42,6 +42,8 @@ export const store = new Vuex.Store({
     //direct_bus_flg to check -> if there is direct bus is checked or not
     direct_bus_flg_2 : false,
 
+    indirect_bus_flg : false,
+
 
     // bus destail ->  route , dist ,time
     bus_route : [],
@@ -113,6 +115,11 @@ export const store = new Vuex.Store({
       return state.direct_bus_flg_2;
     },
 
+    indirect_bus_flg : state => {
+      return state.indirect_bus_flg;
+    },
+
+
     //bus_route
     bus_route : state => {
       return state.bus_route;
@@ -169,6 +176,7 @@ export const store = new Vuex.Store({
       state.direct_buses = [] ;
       state.direct_bus_flg = false;
       state.direct_bus_flg_2 = false;
+      state.indirect_bus_flg = false;
 
       //console.log("going to direct bus");
       if( state.selected_source.name == 'City Name'  ||
@@ -188,7 +196,7 @@ export const store = new Vuex.Store({
             return response.json();
           })
           .then(route=>{
-            //console.log(route);
+            //console.log("CHECK IF NULL $$$$$$"+route);
             for(let i in route){
               console.log(route[i]);
               //console.log(state.check_day);
@@ -201,6 +209,97 @@ export const store = new Vuex.Store({
             if(route == null)
                state.direct_bus_flg_2 = true;
             router.push("/direct_bus"); /*** go to direct bus ***/
+
+            /************************* FIND INDIRECT BUS ******************************/
+              console.log("now finding ---- indirect bus -----");
+
+              let src =  state.selected_source.name;
+              let dest =  state.selected_destination.name;
+
+              Vue.http.get('city_route_matrix/'+src+'.json')
+                .then(response=>{
+                  return response.json();
+                })
+                .then(wp=>{
+                  for(let k1 in Object.keys(wp)){
+                    console.log(Object.keys(wp)[k1]);
+                    Vue.http.get('city_route_matrix/'+src+'/'+Object.keys(wp)[k1]+'.json')
+                      .then(response=>{
+                        return response.json();
+                      })
+                      .then(route1 => {
+                        console.log("route1->"+route1);
+                        for(let k2 in route1){
+                          console.log(route1[k2]);
+                          Vue.http.get('city_route_matrix/'+Object.keys(wp)[k1]+
+                            '/'+dest+'.json')
+                            .then(response=>{
+                              return response.json();
+                            })
+                            .then(route2=>{ //confirm_wp is route2
+                              for(let k3 in route2){
+                                console.log(route2[k3]);
+                                if(route2 != null && route1[k2] != route2[k3] ){
+                                  console.log("X------confirm_wp-----X " +
+                                    Object.keys(wp)[k1] + " <---> "
+                                      + route1[k2] + " <---> " + route2[k3]);
+                                 //
+                                 let route1_str,route2_str;
+                                 Vue.http.get('bus_routes/'+
+                                   route1[k2]+'.json')
+                                  .then(response=>{
+                                    return response.json();
+                                  })
+                                    .then(stops1=>{
+                                        route1_str = '';
+                                        for(let k4 in stops1){
+                                            route1_str+=stops1[k4];
+                                        }
+                                        console.log(route1_str);
+                                        Vue.http.get('bus_routes/'+
+                                          route2[k3]+'.json')
+                                          .then(response=>{
+                                            return response.json();
+                                          })
+                                          .then(stops2=>{
+                                            route2_str='';
+                                            for(let k5 in stops2){
+                                              route2_str+=stops2[k5];
+                                            }
+                                            console.log(route2_str);
+
+                                            //
+                                            if((route1_str.indexOf(src)!=-1
+                                                && route1_str.indexOf(dest)!=-1)
+                                                || (route2_str.indexOf(src)!=-1 &&
+                                                  route2_str.indexOf(dest)!=-1)){
+                                                      console.log("$$$$ oh no $$$$");
+
+                                            }else{
+                                              console.log("### these are indirect routes ###");
+                                              console.log("^^^^^Details Indirect Routes -> "
+                                                + src +" -> "+ Object.keys(wp)[k1] +" => " +
+                                                  route1[k2] + " | " + Object.keys(wp)[k1] +" -> " +
+                                                    dest + " => " + route2[k1]);
+
+                                              state.indirect_bus_flg = true;
+                                            }
+                                            //
+
+                                          })
+                                    })
+
+                                 //
+                                }
+                              }
+
+                            })
+                        }
+                      })
+                  }
+                })
+            /************************* FIND INDIRECT BUS ENDS *************************/
+
           })
         /*** get bus route ENDS ***/
 
@@ -253,12 +352,14 @@ export const store = new Vuex.Store({
                      state.direct_bus_flg_2 = true;
                   }
                   console.log( state.direct_buses);
+
                 })
             //},
             /*** check if day matches ENDS -> if yes -> push_to_store ***/
 
 
           }
+
         })
     },
     /*** get buses on this routes ENDS ***/
@@ -393,6 +494,9 @@ export const store = new Vuex.Store({
 
 
     /**************************** BUS DETAIL ENDS *****************************/
+
+
+
 
 
     //select date & time function -> cz we have to change it from filter also
