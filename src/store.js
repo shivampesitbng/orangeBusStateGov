@@ -42,7 +42,13 @@ export const store = new Vuex.Store({
     //direct_bus_flg to check -> if there is direct bus is checked or not
     direct_bus_flg_2 : false,
 
+    indirect_arr : [],
+
+    //direct_bus_flg to check -> if there is indirect bus or not
     indirect_bus_flg : false,
+
+    indirect_bus_flg2 : false,
+
 
 
     // bus destail ->  route , dist ,time
@@ -118,7 +124,13 @@ export const store = new Vuex.Store({
     indirect_bus_flg : state => {
       return state.indirect_bus_flg;
     },
+    indirect_bus_flg2: state => {
+      return state.indirect_bus_flg2;
+    },
 
+    indirect_arr : state => {
+      return state.indirect_arr;
+    },
 
     //bus_route
     bus_route : state => {
@@ -176,7 +188,7 @@ export const store = new Vuex.Store({
       state.direct_buses = [] ;
       state.direct_bus_flg = false;
       state.direct_bus_flg_2 = false;
-      state.indirect_bus_flg = false;
+      state.indirect_arr = [];
 
       //console.log("going to direct bus");
       if( state.selected_source.name == 'City Name'  ||
@@ -215,6 +227,9 @@ export const store = new Vuex.Store({
 
               let src =  state.selected_source.name;
               let dest =  state.selected_destination.name;
+
+              state.indirect_bus_flg = false;
+              state.indirect_bus_flg2 = false;
 
               Vue.http.get('city_route_matrix/'+src+'.json')
                 .then(response=>{
@@ -299,11 +314,30 @@ export const store = new Vuex.Store({
                                                     })
                                                     .then(bus2=>{
                                                       console.log("%%% bus2 -> "+bus2);
+                                                      //to dom -> tada =>
+                                                      let indirect_set = {
+                                                        wp : Object.keys(wp)[k1],
+                                                        bus_1:{
+                                                          no : bus1,
+                                                          route: route1[k2],
+                                                          wp : Object.keys(wp)[k1],
+                                                          f : 1
+                                                        },
+                                                        bus_2:{
+                                                          no : bus2,
+                                                          route:route2[k3],
+                                                          wp : Object.keys(wp)[k1],
+                                                          f : 2
+                                                        }
+                                                      }
+                                                      state.indirect_arr.push(indirect_set);
                                                     })
+
                                                 })
                                               //
 
                                             }
+                                            state.indirect_bus_flg2 =true;
                                             //
 
                                           })
@@ -390,16 +424,28 @@ export const store = new Vuex.Store({
 
 
 
-    /****************************** BUS DETAIL ********************************/
+    /********************** BUS (INDIRECT) DETAIL ********************************/
 
     get_bus_route(state,bus){
-      console.log(bus.no + " " + bus.route);
+      console.log(bus.no + " $$$$$ " + bus.route);
 
       state.bus_route = [];
       state.bus_dist = [];
       state.bus_time = [];
       let got_src = false , got_dest = false;
       let mrk_src = -1 ,mrk_dest = -1 ;
+
+      let usr_src = state.selected_source.name;
+      let usr_dest=state.selected_destination.name;
+
+      if(bus.f == 1){
+        usr_src = state.selected_source.name;
+        usr_dest = bus.wp;
+      }else if(bus.f==2){
+        usr_src = bus.wp;
+        usr_dest = state.selected_destination.name;
+      }
+
 
       /************ bus routes ***********/
       Vue.http.get('bus_routes/'+bus.route+ '.json') //bus.route is name of route
@@ -411,14 +457,14 @@ export const store = new Vuex.Store({
           for(let i in route){
             //console.log(route[i]); //stops in route
             console.log(route[i]+ " XXXXX "+ state.selected_source.name);
-            if(route[i] == state.selected_source.name){
+            if(route[i] == usr_src){
               console.log("S -> " +route[i]);
               state.bus_route.push("S -> " +route[i]);
               got_src = true;
               mrk_src = i ;
               console.log("marked src -> "+ mrk_src);
               continue;
-            }else if(route[i] == state.selected_destination.name){
+            }else if(route[i] == usr_dest){
               console.log("D -> "+route[i]);
               state.bus_route.push("D -> " +route[i]);
               got_dest = true;
@@ -513,7 +559,8 @@ export const store = new Vuex.Store({
 
 
 
-    /**************************** BUS DETAIL ENDS *****************************/
+    /********************* BUS DETAIL (INDIRECT) ENDS *****************************/
+
 
 
 
