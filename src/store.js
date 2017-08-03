@@ -21,6 +21,9 @@ export const store = new Vuex.Store({
     source_input_selected : false ,
     destination_input_selected : false ,
 
+
+    recent : [] ,
+
     //objects -> details of selected source & destination
     selected_source : {
       //hash_val : -1 ,
@@ -153,6 +156,11 @@ export const store = new Vuex.Store({
     //travel time origin to source
     time_sum_frm_origin_to_src : state => {
       return state.time_sum_frm_origin_to_src;
+    },
+
+    //recent
+    recent : state => {
+      return state.recent ;
     }
 
 
@@ -190,6 +198,11 @@ export const store = new Vuex.Store({
       state.direct_bus_flg_2 = false;
       state.indirect_arr = [];
 
+
+
+
+
+
       //console.log("going to direct bus");
       if( state.selected_source.name == 'City Name'  ||
          state.selected_destination.name == 'City Name'){
@@ -198,6 +211,42 @@ export const store = new Vuex.Store({
          state.selected_destination.name){
         console.log("source & destination cannot be same"); //** snackbar
       }else{
+
+
+        /***** recent ****/
+        let recent_obj = {
+          id:  state.selected_source.name+"-"+state.selected_destination.name+"-"+state.selected_date.day_in_week,
+          src : state.selected_source,
+          dest: state.selected_destination,
+          date : state.selected_date,
+        }
+        let flg_recent =false;
+        if(state.recent.length == 0){
+          state.recent.push(recent_obj);
+          console.log(state.recent);
+        }else{
+          for(let r in state.recent){
+            console.log(recent_obj.id + " "+ state.recent[r].id);
+            if(recent_obj.id == state.recent[r].id){
+              console.log(recent_obj.id + " !!!!!!!!!!!! "+ state.recent[r].id);
+              flg_recent =true;
+              state.recent.splice(r, 1)
+              state.recent.push(recent_obj);
+              console.log(state.recent);
+            }
+          }
+          if(flg_recent ==false){
+            state.recent.push(recent_obj);
+            console.log(state.recent);
+          }
+        }
+
+        // Put the object into storage
+        localStorage.setItem('recent_log', JSON.stringify(state.recent));
+
+
+        /***** recent ends ****/
+
 
         let src =  state.selected_source.name;
         let dest =  state.selected_destination.name;

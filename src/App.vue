@@ -81,6 +81,8 @@
 require('material-design-lite')
 import Firebase from 'firebase'
 
+import {mapGetters} from 'vuex'
+
 let config = {
   apiKey: "AIzaSyA_PTPpIB1tNl-kRZG3JRXwjDZB3jN8ZfY",
   authDomain: "orangebusv1-38083.firebaseapp.com",
@@ -103,9 +105,26 @@ export default {
     hideMenu: function () {
      document.getElementsByClassName('mdl-layout__drawer')[0].classList.remove('is-visible')
      document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible')
+    },
+    load_recent_log(){
+      // Retrieve the object from storage
+      let x = localStorage.getItem('recent_log');
+       let y = JSON.parse(x);
+      for(let i in y){
+        console.log("/////////////////"+ y[i]);
+        this.$store.state.recent.push(y[i]);
+      }
     }
   },
+  computed:{
+    ...mapGetters([
+      'recent'
+    ]),
 
+  },
+  beforeMount(){
+    this.load_recent_log();
+  }
 }
 
 </script>

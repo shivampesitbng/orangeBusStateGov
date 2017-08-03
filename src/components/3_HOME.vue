@@ -52,6 +52,7 @@
       </v-btn>
 
 
+      <show_recent_searches></show_recent_searches>
 
     </v-container fluid>
 
@@ -65,12 +66,15 @@
 
 <script>
 
-
 import {mapGetters} from 'vuex'
 import {mapMutations} from 'vuex'
 
 import show_selected_source from './3_HOME_components/3.1_show_selected_source'
 import show_selected_destination from './3_HOME_components/3.2_show_selected_destination'
+import show_recent_searches from './3_HOME_components/3.4_show_recent_searches'
+
+
+
 
 //id
 export default {
@@ -115,7 +119,8 @@ export default {
 
   components: {
     'show_selected_source' : show_selected_source,
-    'show_selected_destination' : show_selected_destination
+    'show_selected_destination' : show_selected_destination,
+    'show_recent_searches':show_recent_searches
   }
 
 }
