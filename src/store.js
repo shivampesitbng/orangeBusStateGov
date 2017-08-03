@@ -47,6 +47,7 @@ export const store = new Vuex.Store({
     bus_route : [],
     bus_dist : [],
     bus_time :[],
+    clock_time:[],
 
     //objects -> details of selected date & time
     selected_date : {
@@ -95,6 +96,10 @@ export const store = new Vuex.Store({
     //arr of direct time between stop
     bus_time : state => {
       return state.bus_time;
+    },
+    //clock time -> origin clock time + offset time from origin to src
+    clock_time : state => {
+      return state.clock_time;
     },
 
 
@@ -284,6 +289,7 @@ export const store = new Vuex.Store({
           console.log(route);
           for(let i in route){
             //console.log(route[i]); //stops in route
+            console.log(route[i]+ " XXXXX "+ state.selected_source.name);
             if(route[i] == state.selected_source.name){
               console.log("S -> " +route[i]);
               state.bus_route.push("S -> " +route[i]);
@@ -299,56 +305,86 @@ export const store = new Vuex.Store({
               console.log("marked dest -> "+ mrk_dest);
               continue;
             }
+            //
             if(got_src == true && got_dest == false){
               console.log(route[i]);
               state.bus_route.push(route[i]);
-            }else{
+            }else if(got_src == true && got_dest == true){
               break;
             }
+            //
           }
+
+          /**** distance_between_stops_on_route ****/
+
+          Vue.http.get('distance_between_stops_on_route/'
+            +bus.route+'.json')
+            .then(response=>{
+              return response.json();
+            })
+            .then(dist=>{
+              console.log("dist-> "+ dist);
+              let dist_sum = 0;
+              console.log(mrk_src+ " "+ mrk_dest);
+              for(let i = mrk_src; i < mrk_dest; i++){
+                console.log(dist[i]);
+                //state.bus_dist.push(dist[i]);
+                dist_sum = dist_sum + dist[i];
+                state.bus_dist.push(dist_sum);
+              }
+            })
+
+          /**** distance_between_stops_on_route ENDS ****/
+
+          /**** time_between_stops_on_route ****/
+
+          Vue.http.get('travel_time_between_stops_on_route/'
+            +bus.route+'.json')
+            .then(response=>{
+              return response.json();
+            })
+            .then(time=>{
+              console.log("time-> "+ time);
+              let time_sum = 0;
+              for(let i = mrk_src; i < mrk_dest; i++){
+                console.log(time[i]);
+                //state.bus_time.push(time[i]);
+                time_sum = time_sum + time[i];
+                state.bus_time.push(time_sum);
+              }
+              //
+              let clock_time_sum = 0;
+              for(let i =0; i<mrk_src ; i++){
+                console.log(time[i]);
+                clock_time_sum = clock_time_sum + time[i];
+                console.log("time taken to reach src from origin -> "+ clock_time_sum);
+              }
+              //
+            })
+
+          /**** time_between_stops_on_route ENDS ****/
+
+          /**** time from origin ****/
+          Vue.http.get('bus_day_&_time_from_origin/'
+            +bus.no+'/'+state.selected_date.day_in_week+'.json')
+            .then(response=>{
+              return response.json();
+            })
+            .then(clock_time=>{
+              console.log("clock_time-> "+ clock_time);
+              let time_sum = 0;
+              for(let i in clock_time){
+                console.log(clock_time[i]);
+                //new_clock_time = ankit_function(clock_time[i],clock_time_sum);
+                  //clock_time[i] is in form 12:30 & clock_time_sum is in min
+              }
+            })
+          /*** time from origin ends ****/
+
+          router.push("/show_bus_route"); //*** bus_route_screen
 
         })
         /********** bus routes ends ********/
-
-        /**** distance_between_stops_on_route ****/
-
-        Vue.http.get('distance_between_stops_on_route/'
-          +bus.route+'.json')
-          .then(response=>{
-            return response.json();
-          })
-          .then(dist=>{
-            console.log("dist-> "+ dist);
-            for(let i = mrk_src; i < mrk_dest; i++){
-              console.log(dist[i]);
-              state.bus_dist.push(dist[i]);
-            }
-          })
-
-        /**** distance_between_stops_on_route ENDS ****/
-
-
-
-        /**** time_between_stops_on_route ****/
-
-        Vue.http.get('travel_time_between_stops_on_route/'
-          +bus.route+'.json')
-          .then(response=>{
-            return response.json();
-          })
-          .then(time=>{
-            console.log("time-> "+ time);
-            for(let i = mrk_src; i < mrk_dest; i++){
-              console.log(time[i]);
-              state.bus_time.push(time[i]);
-            }
-          })
-
-        /**** time_between_stops_on_route ENDS ****/
-
-
-
-        router.push("/show_bus_route"); //*** bus_route_screen
 
     },
 

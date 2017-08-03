@@ -52,7 +52,7 @@ export default{
   },
   computed:{
     ...mapGetters([
-      'bus_route','bus_dist','bus_time'
+      'bus_route','bus_dist','bus_time',
     ]),
   },
   beforeMount(){
