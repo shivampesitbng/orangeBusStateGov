@@ -326,11 +326,12 @@ export const store = new Vuex.Store({
               console.log("dist-> "+ dist);
               let dist_sum = 0;
               console.log(mrk_src+ " "+ mrk_dest);
+              state.bus_dist.push("0 km");
               for(let i = mrk_src; i < mrk_dest; i++){
                 console.log(dist[i]);
                 //state.bus_dist.push(dist[i]);
                 dist_sum = dist_sum + dist[i];
-                state.bus_dist.push(dist_sum);
+                state.bus_dist.push(dist_sum+" km ");
               }
             })
 
@@ -346,11 +347,12 @@ export const store = new Vuex.Store({
             .then(time=>{
               console.log("time-> "+ time);
               let time_sum = 0;
+              state.bus_time.push("0 min");
               for(let i = mrk_src; i < mrk_dest; i++){
                 console.log(time[i]);
                 //state.bus_time.push(time[i]);
                 time_sum = time_sum + time[i];
-                state.bus_time.push(time_sum);
+                state.bus_time.push(time_sum+ " min ");
               }
               //
               let clock_time_sum = 0;
@@ -378,10 +380,9 @@ export const store = new Vuex.Store({
                 //new_clock_time = ankit_function(clock_time[i],clock_time_sum);
                   //clock_time[i] is in form 12:30 & clock_time_sum is in min
               }
+              router.push("/show_bus_route"); //*** bus_route_screen
             })
           /*** time from origin ends ****/
-
-          router.push("/show_bus_route"); //*** bus_route_screen
 
         })
         /********** bus routes ends ********/
