@@ -353,6 +353,7 @@ export const store = new Vuex.Store({
                 //state.bus_time.push(time[i]);
                 time_sum = time_sum + time[i];
                 state.bus_time.push(time_sum+ " min ");
+                //time_in_hr = change_min_to_hr(time_sum); //ANKIT FUNC2
               }
               //
               let clock_time_sum = 0;
