@@ -33,7 +33,7 @@ export const store = new Vuex.Store({
       name : 'City Name'
     },
 
-    //direct_buses
+    //direct_buses *selected*
     direct_buses : [],
 
     //direct_bus_flg to check -> if there is direct bus or not
@@ -42,14 +42,11 @@ export const store = new Vuex.Store({
     //direct_bus_flg to check -> if there is direct bus is checked or not
     direct_bus_flg_2 : false,
 
-    //selected bus -> details
-    selected_bus_detail :{
-      no : '',
-      route_name : '',
-      route : []
-    },
 
-
+    // bus destail ->  route , dist ,time
+    bus_route : [],
+    bus_dist : [],
+    bus_time :[],
 
     //objects -> details of selected date & time
     selected_date : {
@@ -91,6 +88,15 @@ export const store = new Vuex.Store({
     direct_buses : state => {
       return state.direct_buses;
     },
+    //arr of direct dist between stop
+    bus_dist : state => {
+      return state.bus_dist;
+    },
+    //arr of direct time between stop
+    bus_time : state => {
+      return state.bus_time;
+    },
+
 
     //check if direct bus is or not
     direct_bus_flg : state => {
@@ -100,6 +106,11 @@ export const store = new Vuex.Store({
     //check if direct bus is checked or not
     direct_bus_flg_2 : state => {
       return state.direct_bus_flg_2;
+    },
+
+    //bus_route
+    bus_route : state => {
+      return state.bus_route;
     },
 
     // getting date & time ame -> for filter component
@@ -150,9 +161,9 @@ export const store = new Vuex.Store({
     /*** find bus ***/
     find_bus(state,get_bus_on_this_route){
 
-       state.direct_bus_flg = false;
-       state.direct_bus_flg_2 = false;
-       state.direct_buses = [] ;
+      state.direct_buses = [] ;
+      state.direct_bus_flg = false;
+      state.direct_bus_flg_2 = false;
 
       //console.log("going to direct bus");
       if( state.selected_source.name == 'City Name'  ||
@@ -224,7 +235,7 @@ export const store = new Vuex.Store({
                   for(let k in Object.keys(day)){
                     console.log(Object.keys(day)[k]);
                     //console.log( state.selected_date.day_in_week);
-                    if(Object.keys(day)[k] ==  state.selected_date.day_in_week){
+                    if(Object.keys(day)[k] ===  state.selected_date.day_in_week){
                       console.log("show_only this bus -> "+bus);
                       let bus_obj = {
                         no: bus,
@@ -252,6 +263,98 @@ export const store = new Vuex.Store({
 
 
 
+
+    /****************************** BUS DETAIL ********************************/
+
+    get_bus_route(state,bus){
+      console.log(bus.no + " " + bus.route);
+
+      state.bus_route = [];
+      state.bus_dist = [];
+      state.bus_time = [];
+      let got_src = false , got_dest = false;
+      let mrk_src = -1 ,mrk_dest = -1 ;
+
+      /************ bus routes ***********/
+      Vue.http.get('bus_routes/'+bus.route+ '.json') //bus.route is name of route
+        .then(response=>{
+          return response.json();
+        })
+        .then(route=>{
+          console.log(route);
+          for(let i in route){
+            //console.log(route[i]); //stops in route
+            if(route[i] == state.selected_source.name){
+              console.log("S -> " +route[i]);
+              state.bus_route.push("S -> " +route[i]);
+              got_src = true;
+              mrk_src = i ;
+              console.log("marked src -> "+ mrk_src);
+              continue;
+            }else if(route[i] == state.selected_destination.name){
+              console.log("D -> "+route[i]);
+              state.bus_route.push("D -> " +route[i]);
+              got_dest = true;
+              mrk_dest = i ;
+              console.log("marked dest -> "+ mrk_dest);
+              continue;
+            }
+            if(got_src == true && got_dest == false){
+              console.log(route[i]);
+              state.bus_route.push(route[i]);
+            }else{
+              break;
+            }
+          }
+
+        })
+        /********** bus routes ends ********/
+
+        /**** distance_between_stops_on_route ****/
+
+        Vue.http.get('distance_between_stops_on_route/'
+          +bus.route+'.json')
+          .then(response=>{
+            return response.json();
+          })
+          .then(dist=>{
+            console.log("dist-> "+ dist);
+            for(let i = mrk_src; i < mrk_dest; i++){
+              console.log(dist[i]);
+              state.bus_dist.push(dist[i]);
+            }
+          })
+
+        /**** distance_between_stops_on_route ENDS ****/
+
+
+
+        /**** time_between_stops_on_route ****/
+
+        Vue.http.get('travel_time_between_stops_on_route/'
+          +bus.route+'.json')
+          .then(response=>{
+            return response.json();
+          })
+          .then(time=>{
+            console.log("time-> "+ time);
+            for(let i = mrk_src; i < mrk_dest; i++){
+              console.log(time[i]);
+              state.bus_time.push(time[i]);
+            }
+          })
+
+        /**** time_between_stops_on_route ENDS ****/
+
+
+
+        router.push("/show_bus_route"); //*** bus_route_screen
+
+    },
+
+
+
+    /**************************** BUS DETAIL ENDS *****************************/
 
 
     //select date & time function -> cz we have to change it from filter also

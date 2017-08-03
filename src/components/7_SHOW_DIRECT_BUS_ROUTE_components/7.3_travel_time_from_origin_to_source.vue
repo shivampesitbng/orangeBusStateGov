@@ -1,3 +1,0 @@
-<template>
-  origin time
-<template>

@@ -7,7 +7,7 @@
 
         <li v-for="bus in direct_buses">
           {{bus.no}}
-          <button @click="get_route(bus)">route</button>
+          <button @click="get_bus_route(bus)">route</button>
         </li>
 
         <p v-if="direct_bus_flg == false && direct_bus_flg_2==true">NO DIRECT BUS ON THIS ROUTE !</p>
@@ -51,7 +51,7 @@ export default{
   },
   methods:{
     ...mapMutations([
-
+      'get_bus_route'
     ]),
 
     /*** go to indirect_bus ***/
@@ -60,14 +60,6 @@ export default{
       this.$router.push('/indirect_bus');
     },
     /*** go to indirect_bus ends ***/
-
-
-
-    /*** get_route ***/
-    get_route(bus){
-      console.log(bus.no + " " + bus.route);
-    }
-    /*** get_route ENDS***/
 
   },
   computed:{
