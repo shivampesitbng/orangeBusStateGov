@@ -280,9 +280,29 @@ export const store = new Vuex.Store({
                                               console.log("^^^^^Details Indirect Routes -> "
                                                 + src +" -> "+ Object.keys(wp)[k1] +" => " +
                                                   route1[k2] + " | " + Object.keys(wp)[k1] +" -> " +
-                                                    dest + " => " + route2[k1]);
+                                                    dest + " => " + route2[k3]);
 
                                               state.indirect_bus_flg = true;
+
+                                              //
+                                              Vue.http.get('buses_on_route/'+
+                                                route1[k2]+'.json')
+                                                .then(response=>{
+                                                  return response.json();
+                                                })
+                                                .then(bus1=>{
+                                                  console.log("%%% bus1 -> "+bus1);
+                                                  Vue.http.get('buses_on_route/'+
+                                                    route2[k3]+'.json')
+                                                    .then(response=>{
+                                                      return response.json();
+                                                    })
+                                                    .then(bus2=>{
+                                                      console.log("%%% bus2 -> "+bus2);
+                                                    })
+                                                })
+                                              //
+
                                             }
                                             //
 
