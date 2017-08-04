@@ -2,6 +2,13 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from './router'
 import VueResource from 'vue-resource'
+import VueProgressBar from 'vue-progressbar'
+
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
+});
 
 Vue.use(Vuex);
 Vue.use(VueResource);
@@ -192,6 +199,8 @@ export const store = new Vuex.Store({
     },
 
 
+
+
     /**************************  FIND BUS - Direct Bus ************************/
 
     /*** find bus ***/
@@ -203,8 +212,8 @@ export const store = new Vuex.Store({
       state.indirect_arr = [];
 
 
-
-
+      let tmp_str = '';
+      let tmp_str2 = 'gfgboss:P';
 
 
       //console.log("going to direct bus");
@@ -260,9 +269,14 @@ export const store = new Vuex.Store({
         let dest =  state.selected_destination.name;
 
         /*** get bus route ***/
+        //Vue.Progress.start();
+
         Vue.http.get('city_route_matrix/'+src+'/'+dest+'.json')
           .then(response=>{
+          //  Vue.Progress.finish();
             return response.json();
+          },response=>{
+          //  Vue.Progress.fail()
           })
           .then(route=>{
             //console.log("CHECK IF NULL $$$$$$"+route);
@@ -467,34 +481,44 @@ export const store = new Vuex.Store({
                                                                                             for(let k13 in sch2[Object.keys(sch2)[s2]]){
                                                                                               console.log(sch2[Object.keys(sch2)[s2]][k13]);
                                                                                               let ta2 =sch2[Object.keys(sch2)[s2]][k13].split(":");
-                                                                                              if((ta[0] < ta2[0]) || ta[0] == ta2[0] && ta[1]<ta2[1]){
+                                                                                              if((ta[0] < ta2[0]) || (ta[0] == ta2[0] && ta[1]<ta2[1])){
 
 
-                                                                                                //to dom -> tada =>
-                                                                                                let indirect_set = {
-                                                                                                  bus_1:{
-                                                                                                    no : bus1[b1],
-                                                                                                    route: route1[k2],
-                                                                                                    wp : Object.keys(wp)[k1],
-                                                                                                    f : 1 ,
-                                                                                                    a_t : a_t
-                                                                                                  },
-                                                                                                  bus_2:{
-                                                                                                    no : bus2[b2],
-                                                                                                    route:route2[k3],
-                                                                                                    wp : Object.keys(wp)[k1],
-                                                                                                    f : 2
+                                                                                                tmp_str += bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
+                                                                                                console.log(tmp_str);
+
+
+                                                                                                console.log(tmp_str2);
+                                                                                                if(tmp_str.indexOf(tmp_str2)==-1){
+
+
+                                                                                                  tmp_str2 = bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
+                                                                                                  //to dom -> tada =>
+                                                                                                  let indirect_set = {
+                                                                                                    bus_1:{
+                                                                                                      no : bus1[b1],
+                                                                                                      route: route1[k2],
+                                                                                                      wp : Object.keys(wp)[k1],
+                                                                                                      f : 1 ,
+                                                                                                      a_t : a_t
+                                                                                                    },
+                                                                                                    bus_2:{
+                                                                                                      no : bus2[b2],
+                                                                                                      route:route2[k3],
+                                                                                                      wp : Object.keys(wp)[k1],
+                                                                                                      f : 2
+                                                                                                    }
                                                                                                   }
+                                                                                                  state.indirect_bus_flg = true;
+                                                                                                  state.indirect_arr.push(indirect_set);
+                                                                                                  //to dom ends
                                                                                                 }
-                                                                                                state.indirect_bus_flg = true;
-                                                                                                state.indirect_arr.push(indirect_set);
-                                                                                                //to dom ends
-
                                                                                               }
                                                                                             }
                                                                                           }
 
                                                                                         })
+
                                                                                     }
                                                                                   }
                                                                                 })

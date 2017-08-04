@@ -2,6 +2,7 @@
   <div>
     <!--p>{{search_city_name}}</p-->
     <v-container fluid id="main">
+
       <v-card class="white lighten-4 elevation-3" >
         <v-card-text>
           <v-layout row>
@@ -60,6 +61,7 @@ export default {
     /*show_hide_footer(){
       document.getElementById('home_footer').style.visibility = 'hidden';
     },*/
+
     search_city_function(){
       //console.log(this.search_city_name[0]);
       if(this.search_city_name[0] == undefined){
@@ -68,10 +70,14 @@ export default {
         }
         return;
       }
+      this.$Progress.start();
       this.$http.get('cities_&_stops/' + this.search_city_name[0].toUpperCase() + '.json' )
         .then(response => {
           this.cities_array = [];
+          this.$Progress.finish();
           return response.json();
+        },response=>{
+          this.$Progress.fail()
         })
         .then(cities => {
           //console.log("cities from db -> "+cities);

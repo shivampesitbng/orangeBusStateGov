@@ -1,6 +1,6 @@
 <template>
   <div id="app" class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-
+<vue-progress-bar></vue-progress-bar>
     <!-- header -->
       <header class="mdl-layout__header">
         <div class="mdl-layout__header-row">
@@ -107,6 +107,7 @@ export default {
      document.getElementsByClassName('mdl-layout__obfuscator')[0].classList.remove('is-visible')
     },
     load_recent_log(){
+      this.$Progress.start();
       // Retrieve the object from storage
       let x = localStorage.getItem('recent_log');
        let y = JSON.parse(x);
@@ -114,8 +115,10 @@ export default {
         console.log("/////////////////"+ y[i]);
         this.$store.state.recent.push(y[i]);
       }
+      this.$Progress.finish();
     },
     today_day(){
+
       let d = new Date();
       let dv = d.getDay();
       console.log(dv);
@@ -135,6 +138,7 @@ export default {
         this.$store.state.selected_date.day_in_week = "SA";
       }
       console.log("Todays Day -> "+ this.$store.state.selected_date.day_in_week);
+
     }
   },
   computed:{

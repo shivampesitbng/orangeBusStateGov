@@ -7,11 +7,11 @@
 
           <span>
             {{set.bus_1.no}}
-            <button @click="get_bus_route(set.bus_1)">route</button>
+            <button @click="get_bus_route(set.bus_1);">route</button>
           </span>
           <!--span v-for='bus in set.bus_1.no'>
             {{bus}}
-            <button @click="get_bus_route(set.bus_1)">route</button>
+            <button @click="get_bus_route(set.bus_1);">route</button>
           </span--> |
 
           {{set.bus_1.wp}} |
@@ -27,7 +27,7 @@
 
         </li>
 
-        <p v-if="indirect_bus_flg == false && indirect_bus_flg2 == true">NO INDIRECT BUS ON THIS ROUTE !</p>
+        <p  v-if="indirect_bus_flg == false && indirect_bus_flg2 == true">NO INDIRECT BUS ON THIS ROUTE !</p>
 
       </v-card>
     </v-container>
