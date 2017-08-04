@@ -8,7 +8,7 @@
         <!--p>direct bus</p-->
 
         <li v-for="bus in direct_buses">
-          {{bus.no}}
+          {{bus.no}} - {{bus.type}}
           <button @click="get_bus_route(bus)">route</button>
         </li>
 
@@ -32,32 +32,12 @@
       >
 
         <v-btn dark style="color:#fff" >
-          <p style="margin-top:11%;">Find Indirect Bus</p>
+          <p style="margin-top:14%;">Indirect Bus</p>
         </v-btn>
 
 
       </v-bottom-nav>
-      <v-bottom-nav
-        v-else
-        absolute
-        shift
-        value="true"
-        style="background:rgba(0,0,0,0.45);height:55px"
-        id="home_footer"
 
-        elevation-3
-      >
-
-        <v-btn dark style="color:#fff;" v-if="show3">
-          <p style="margin-top:8%;">
-            No Indirect-Bus Found !
-            <br>
-            Status May Change !
-          </p>
-        </v-btn>
-
-
-      </v-bottom-nav>
 
       </transition >
     <!-- footer ends -->

@@ -32,6 +32,9 @@
 
     <!-- main -->
       <main id="main-app">
+
+
+
         <transition name="fade" mode="out-in" v-on:after-enter="" appear>
           <router-view></router-view>
         </transition>
@@ -83,20 +86,14 @@
 
 
 
+
 require('material-design-lite')
-import Firebase from 'firebase'
+
+
 
 import {mapGetters} from 'vuex'
 
-let config = {
-  apiKey: "AIzaSyA_PTPpIB1tNl-kRZG3JRXwjDZB3jN8ZfY",
-  authDomain: "orangebusv1-38083.firebaseapp.com",
-  databaseURL: "https://orangebusv1-38083.firebaseio.com",
-  projectId: "orangebusv1-38083",
-  storageBucket: "orangebusv1-38083.appspot.com",
-  messagingSenderId: "1004962777996"
-};
-Firebase.initializeApp(config)
+
 
 
 export default {
@@ -152,10 +149,12 @@ export default {
     ]),
 
   },
+
   beforeMount(){
     this.load_recent_log();
     this.today_day();
-  }
+  },
+
 }
 
 

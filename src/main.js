@@ -25,6 +25,8 @@ Vue.http.options.root='https://orangebusv1-38083.firebaseio.com/'+state_name+ '/
 
 Vue.config.productionTip = false
 
+
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

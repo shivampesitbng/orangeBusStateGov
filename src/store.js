@@ -16,6 +16,9 @@ Vue.use(VueResource);
 let state_name = 'rajasthan';
 Vue.http.options.root='https://orangebusv1-38083.firebaseio.com/'+state_name+ '/';
 
+
+
+
 export const store = new Vuex.Store({
 
   //state
@@ -295,6 +298,7 @@ export const store = new Vuex.Store({
                 })
                 .then(wp=>{
                   for(let k1 in Object.keys(wp)){
+
                     console.log(Object.keys(wp)[k1]);
                     Vue.http.get('city_route_matrix/'+src+'/'+Object.keys(wp)[k1]+'.json')
                       .then(response=>{
@@ -481,25 +485,49 @@ export const store = new Vuex.Store({
 
 
                                                                                                   tmp_str2 = bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
-                                                                                                  //to dom -> tada =>
-                                                                                                  let indirect_set = {
-                                                                                                    bus_1:{
-                                                                                                      no : bus1[b1],
-                                                                                                      route: route1[k2],
-                                                                                                      wp : Object.keys(wp)[k1],
-                                                                                                      f : 1 ,
-                                                                                                      a_t : a_t
-                                                                                                    },
-                                                                                                    bus_2:{
-                                                                                                      no : bus2[b2],
-                                                                                                      route:route2[k3],
-                                                                                                      wp : Object.keys(wp)[k1],
-                                                                                                      f : 2
-                                                                                                    }
-                                                                                                  }
-                                                                                                  state.indirect_bus_flg = true;
-                                                                                                  state.indirect_arr.push(indirect_set);
-                                                                                                  //to dom ends
+
+                                                                                                  Vue.http.get('bus_type/'+bus1[b1]+'.json')
+                                                                                                    .then(response=>{
+                                                                                                      return response.json();
+                                                                                                    })
+                                                                                                    .then(b_type1=>{
+                                                                                                      console.log(b_type1[0]);
+
+                                                                                                      Vue.http.get('bus_type/'+bus2[b2]+'.json')
+                                                                                                        .then(response=>{
+                                                                                                          return response.json();
+                                                                                                        })
+                                                                                                        .then(b_type2=>{
+                                                                                                          console.log(b_type2[0]);
+
+                                                                                                          //to dom -> tada =>
+                                                                                                          let indirect_set = {
+                                                                                                            bus_1:{
+                                                                                                              no : bus1[b1],
+                                                                                                              route: route1[k2],
+                                                                                                              wp : Object.keys(wp)[k1],
+                                                                                                              f : 1 ,
+                                                                                                              a_t : a_t,
+                                                                                                              type:b_type1[0]
+                                                                                                            },
+                                                                                                            bus_2:{
+                                                                                                              no : bus2[b2],
+                                                                                                              route:route2[k3],
+                                                                                                              wp : Object.keys(wp)[k1],
+                                                                                                              f : 2,
+                                                                                                              type:b_type2[0]
+                                                                                                            }
+                                                                                                          }
+                                                                                                          state.indirect_bus_flg = true;
+                                                                                                          state.indirect_arr.push(indirect_set);
+                                                                                                          //to dom ends
+
+                                                                                                        })
+
+                                                                                                    })
+
+
+
                                                                                                 }
                                                                                               }
                                                                                             }
@@ -536,10 +564,14 @@ export const store = new Vuex.Store({
                                 }
                               }
 
+
                             })
                         }
                       })
+
                   }
+
+                  console.log("line no -> 545 SERIOUSLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 })
             /************************* FIND INDIRECT BUS ENDS *************************/
 
@@ -618,13 +650,22 @@ export const store = new Vuex.Store({
                     //console.log( state.selected_date.day_in_week);
                     if(Object.keys(day)[k] ===  state.selected_date.day_in_week){
                       console.log("show_only this bus -> "+bus);
-                      let bus_obj = {
-                        no: bus,
-                        route : route
-                      }
-                       state.direct_bus_flg = true;
-                      console.log("cnt");
-                       state.direct_buses.push(bus_obj);
+                      Vue.http.get('bus_type/'+bus+'.json')
+                        .then(response=>{
+                          return response.json();
+                        })
+                        .then(b_type=>{
+                          console.log(b_type);
+                          let bus_obj = {
+                            no: bus,
+                            route : route,
+                            type : b_type[0]
+                          }
+                           state.direct_bus_flg = true;
+                          console.log("cnt");
+                           state.direct_buses.push(bus_obj);
+                        })
+
                     }
                      state.direct_bus_flg_2 = true;
                   }
