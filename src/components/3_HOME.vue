@@ -4,8 +4,10 @@
     <!--p>{{test_var}}</p--> <!-- accessing from mapGetter -->
     <!--button @click="test_function">test_function</button-->
 
+    <transition name="fade">
 
-    <v-container fluid >
+
+    <v-container fluid v-if="show">
 
       <v-card class="white lighten-4 elevation-3 source-destination-input-card">
 
@@ -55,9 +57,9 @@
       <show_selected_date></show_selected_date>
       <show_recent_searches></show_recent_searches>
 
-    </v-container fluid>
+    </v-container>
 
-
+  </transition>
 
 
 
@@ -85,6 +87,7 @@ export default {
   data () {
     return {
       test_var_2:'',
+       //show: true
     }
   },
   //data ends
@@ -107,7 +110,7 @@ export default {
     by changing the other variables dependent on the changed one => must return something */
   computed:{
       ...mapGetters([
-
+          'show'
       ]),
   },
   //computed ends
@@ -153,5 +156,10 @@ a {
   margin-top:-10%;
 }
 
-
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0
+}
 </style>

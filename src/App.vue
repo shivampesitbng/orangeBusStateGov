@@ -19,22 +19,25 @@
       <span class="mdl-layout-title">Orange Bus</span>
       <nav class="mdl-navigation">
         <router-link class="mdl-navigation__link" to="/" @click.native="hideMenu"><i class="material-icons">&#xE88A;</i> Home</router-link>
-        <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE242;</i> Trip Planner</router-link>
-        <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE569;</i> Nearby Stops</router-link>
-        <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE55F;</i> Track Bus</router-link>
-        <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE55B;</i> Change State</router-link>
+        <!--router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE242;</i> Trip Planner</router-link-->
+        <!--router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE569;</i> Nearby Stops</router-link-->
+        <!--router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE55F;</i> Track Bus</router-link-->
+        <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE86D;</i> How to Use ?</router-link>
         <router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE873;</i> About Us</router-link>
+        <!--router-link class="mdl-navigation__link" to="/post" @click.native="hideMenu"><i class="material-icons">&#xE873;</i> Contact Us</router-link-->
       </nav>
     </div>
     <!-- nav-drawer ends -->
 
 
     <!-- main -->
-      <main>
+      <main id="main-app">
         <transition name="fade" mode="out-in" v-on:after-enter="" appear>
           <router-view></router-view>
         </transition>
       </main>
+
+
     <!-- main ends -->
 
 
@@ -77,6 +80,8 @@
 </template>
 
 <script>
+
+
 
 require('material-design-lite')
 import Firebase from 'firebase'
@@ -153,6 +158,7 @@ export default {
   }
 }
 
+
 </script>
 
 <style >
@@ -177,6 +183,10 @@ body {
 main {
   text-align: center;
   margin-top: 40px;
+}
+
+#pb{
+
 }
 
 header {

@@ -59,6 +59,7 @@ export const store = new Vuex.Store({
 
     indirect_bus_flg2 : false,
 
+
     arrival_time:[],
 
     // bus destail ->  route , dist ,time
@@ -85,6 +86,9 @@ export const store = new Vuex.Store({
 
     time_sum_frm_origin_to_src : -1 ,
 
+    show : true ,
+    show2: true ,
+    show3 : true,
 
   },
   //state end
@@ -101,6 +105,16 @@ export const store = new Vuex.Store({
     },
     selected_destination : state => {
       return state.selected_destination;
+    },
+
+    show : state=>{
+      return state.show
+    },
+    show2 : state=>{
+        return state.show2
+    },
+    show3 : state=>{
+        return state.show3
     },
 
     //arr of direct buses
@@ -206,10 +220,13 @@ export const store = new Vuex.Store({
     /*** find bus ***/
     find_bus(state,get_bus_on_this_route){
 
+    //  document.getElementById('main-app').style.display="none";
+
       state.direct_buses = [] ;
       state.direct_bus_flg = false;
       state.direct_bus_flg_2 = false;
       state.indirect_arr = [];
+
 
 
       let tmp_str = '';
@@ -224,45 +241,13 @@ export const store = new Vuex.Store({
          state.selected_destination.name){
         console.log("source & destination cannot be same"); //** snackbar
       }else{
-
+          state.show = false;
 
        let z = {
           day_in_week : state.selected_date.day_in_week
         }
 
-        /***** recent ****/
-        let recent_obj = {
-          id:  state.selected_source.name+"-"+state.selected_destination.name+"-"+state.selected_date.day_in_week,
-          src : state.selected_source,
-          dest: state.selected_destination,
-          date : z,
-        }
-        let flg_recent =false;
-        if(state.recent.length == 0){
-          state.recent.push(recent_obj);
-          console.log(state.recent);
-        }else{
-          for(let r in state.recent){
-            console.log(recent_obj.id + " "+ state.recent[r].id);
-            if(recent_obj.id == state.recent[r].id){
-              console.log(recent_obj.id + " !!!!!!!!!!!! "+ state.recent[r].id);
-              flg_recent =true;
-              state.recent.splice(r, 1)
-              state.recent.push(recent_obj);
-              console.log(state.recent);
-            }
-          }
-          if(flg_recent ==false){
-            state.recent.push(recent_obj);
-            console.log(state.recent);
-          }
-        }
 
-        // Put the object into storage
-        localStorage.setItem('recent_log', JSON.stringify(state.recent));
-
-
-        /***** recent ends ****/
 
 
         let src =  state.selected_source.name;
@@ -291,8 +276,10 @@ export const store = new Vuex.Store({
             //console.log("route -> " + route);
             if(route == null)
                state.direct_bus_flg_2 = true;
-            router.push("/direct_bus"); /*** go to direct bus ***/
 
+            router.push("/direct_bus"); /*** go to direct bus ***/
+            state.show = true ;
+      //      document.getElementById('main-app').style.display="block";
             /************************* FIND INDIRECT BUS ******************************/
               console.log("now finding ---- indirect bus -----");
 
@@ -440,6 +427,7 @@ export const store = new Vuex.Store({
                                                                                           return response.json();
                                                                                         })
                                                                                         .then(t1=>{
+
                                                                                           console.log(t1);
                                                                                           let sum_t1 = 0;
                                                                                           for(let k11=0; k11<mrk_wp ; k11++){
@@ -557,6 +545,39 @@ export const store = new Vuex.Store({
 
           })
         /*** get bus route ENDS ***/
+        /***** recent ****/
+        let recent_obj = {
+          id:  state.selected_source.name+"-"+state.selected_destination.name+"-"+state.selected_date.day_in_week,
+          src : state.selected_source,
+          dest: state.selected_destination,
+          date : z,
+        }
+        let flg_recent =false;
+        if(state.recent.length == 0){
+          state.recent.push(recent_obj);
+          console.log(state.recent);
+        }else{
+          for(let r in state.recent){
+            console.log(recent_obj.id + " "+ state.recent[r].id);
+            if(recent_obj.id == state.recent[r].id){
+              console.log(recent_obj.id + " !!!!!!!!!!!! "+ state.recent[r].id);
+              flg_recent =true;
+              state.recent.splice(r, 1)
+              state.recent.push(recent_obj);
+              console.log(state.recent);
+            }
+          }
+          if(flg_recent ==false){
+            state.recent.push(recent_obj);
+            console.log(state.recent);
+          }
+        }
+
+        // Put the object into storage
+        localStorage.setItem('recent_log', JSON.stringify(state.recent));
+
+
+        /***** recent ends ****/
 
       }
     },
@@ -565,6 +586,7 @@ export const store = new Vuex.Store({
 
     /*** get buses on this route ***/
     get_bus_on_this_route(state,route){
+
       console.log("route -> "+ route);
       Vue.http.get('buses_on_route/'+route+'.json')
         .then(response=>{
@@ -616,6 +638,7 @@ export const store = new Vuex.Store({
           }
 
         })
+
     },
     /*** get buses on this routes ENDS ***/
 
@@ -628,6 +651,8 @@ export const store = new Vuex.Store({
     /********************** BUS (INDIRECT) DETAIL ********************************/
 
     get_bus_route(state,bus){
+        state.show2 = false
+        console.log("777777777777777777777 -> "+ state.show2);
       console.log(bus.no + " $$$$$ " + bus.route);
 
       state.bus_route = [];
@@ -787,6 +812,7 @@ export const store = new Vuex.Store({
 
         })
         /********** bus routes ends ********/
+      //  state.show2 = true
 
     },
 

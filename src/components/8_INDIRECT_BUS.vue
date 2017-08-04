@@ -1,6 +1,7 @@
 <template>
   <div>
-    <v-container fluid id="main">
+  <transition name="fade">
+    <v-container fluid id="main"  v-if="show2">
       <v-card class="white lighten-4 elevation-3">
 
         <li v-for="set in indirect_arr" >
@@ -27,10 +28,9 @@
 
         </li>
 
-        <p  v-if="indirect_bus_flg == false && indirect_bus_flg2 == true">NO INDIRECT BUS ON THIS ROUTE !</p>
-
       </v-card>
     </v-container>
+  </transition >
 
     <!-- footer -->
       <v-bottom-nav
@@ -73,27 +73,28 @@ export default{
       //console.log("going to direct_bus");
       this.$router.push("/direct_bus");
     },
+    show_again(){
+      this.$store.state.show2 = true
+    }
   },
   computed:{
     ...mapGetters([
-      'indirect_arr','selected_source','selected_destination','indirect_bus_flg','indirect_bus_flg2'
+      'indirect_arr','selected_source','selected_destination','indirect_bus_flg','show2'
     ]),
   },
   beforeMount(){
-
+    this.show_again();
   }
 }
 </script>
 
 <style scoped>
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 0.3s
+  transition: opacity .5s
 }
-
-.fade-enter, .fade-leave-active {
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
   opacity: 0
 }
-
 #main{
   margin-top:-10%;
 }
