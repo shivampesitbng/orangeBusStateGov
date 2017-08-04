@@ -10,11 +10,22 @@ import VueFire from 'vuefire'
 import VueResource from 'vue-resource'
 import VueProgressBar from 'vue-progressbar'
 
-Vue.use(VueProgressBar, {
-  color: 'rgb(143, 255, 199)',
-  failedColor: 'red',
-  height: '2px'
-})
+const options = {
+  color: '#b3d4fc',
+  failedColor: '#874b4b',
+  thickness: '5px',
+  transition: {
+    speed: '0.1s',
+    opacity: '0.6s',
+    termination: 9000
+  },
+  autoRevert: true,
+  location: 'left',
+  inverse: false
+}
+
+Vue.use(VueProgressBar, options)
+
 Vue.use(Vuetify)
 Vue.directive('ripple', Ripple);
 Vue.use(VueFire)

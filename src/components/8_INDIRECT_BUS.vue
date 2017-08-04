@@ -28,6 +28,8 @@
 
         </li>
 
+        <p v-if="indirect_arr.length < 1">{{msg}}</p>
+
       </v-card>
     </v-container>
   </transition >
@@ -63,6 +65,8 @@ export default{
   data(){
     return{
       wp_arr : [] ,
+      msg : '',
+
     }
   },
   methods:{
@@ -71,11 +75,29 @@ export default{
     ]),
     go_to_direct_bus(){
       //console.log("going to direct_bus");
+      this.$Progress.start();
       this.$router.push("/direct_bus");
+      this.$Progress.finish();
     },
     show_again(){
       this.$store.state.show2 = true
-    }
+    },
+    shw_msg(){
+      this.msg = 'finding bus...'
+
+      setTimeout(()=>{
+        if(this.$store.state.indirect_arr.length == 0){
+          this.msg = 'no indirect bus'
+          }
+      },3000);
+    },
+    pb(){
+      this.$Progress.start();
+      setTimeout(()=>{
+          this.$Progress.finish();
+      },3000);
+
+    },
   },
   computed:{
     ...mapGetters([
@@ -84,6 +106,10 @@ export default{
   },
   beforeMount(){
     this.show_again();
+    this.shw_msg();
+  },
+  mounted(){
+
   }
 }
 </script>

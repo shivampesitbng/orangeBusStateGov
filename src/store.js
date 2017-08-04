@@ -221,19 +221,18 @@ export const store = new Vuex.Store({
     /**************************  FIND BUS - Direct Bus ************************/
 
     /*** find bus ***/
-    find_bus(state,get_bus_on_this_route){
+    find_bus(state){
 
     //  document.getElementById('main-app').style.display="none";
 
       state.direct_buses = [] ;
       state.direct_bus_flg = false;
       state.direct_bus_flg_2 = false;
-      state.indirect_arr = [];
 
 
 
-      let tmp_str = '';
-      let tmp_str2 = 'gfgboss:P';
+
+
 
 
       //console.log("going to direct bus");
@@ -274,7 +273,71 @@ export const store = new Vuex.Store({
               //console.log(state.get_bus_on_this_route);
               //console.log(check_day);
               //console.log(get_bus_on_this_route);
-              get_bus_on_this_route(route[i]);
+            //  get_bus_on_this_route(route[i]);
+
+
+              console.log("route -> "+ route[i]);
+              Vue.http.get('buses_on_route/'+route[i]+'.json')
+                .then(response=>{
+                  return response.json();
+                })
+                .then(buses=>{
+                  console.log(buses);
+                  for(let j in buses){
+                    console.log(buses[j]);
+
+                    let bus = buses[j];
+
+                    //console.log(check_day);
+                    //check_day(buses[j],route);
+
+
+                    /*** check if day matches -> if yes -> push_to_store ***/
+                    //check_day(state,bus,route){
+                      Vue.http.get('bus_day_&_time_from_origin/'+
+                        bus+'.json')
+                        .then(response=>{
+                          return response.json();
+                        })
+                        .then(day=>{
+                          console.log(day);
+                          console.log(Object.keys(day));
+                          for(let k in Object.keys(day)){
+                            console.log(Object.keys(day)[k]);
+                            //console.log( state.selected_date.day_in_week);
+                            if(Object.keys(day)[k] ===  state.selected_date.day_in_week){
+                              console.log("show_only this bus -> "+bus);
+                              Vue.http.get('bus_type/'+bus+'.json')
+                                .then(response=>{
+                                  return response.json();
+                                })
+                                .then(b_type=>{
+                                  console.log(b_type);
+                                  let bus_obj = {
+                                    no: bus,
+                                    route : route[i],
+                                    type : b_type[0]
+                                  }
+                                   state.direct_bus_flg = true;
+                                  console.log("cnt");
+                                   state.direct_buses.push(bus_obj);
+                                })
+
+                            }
+                             state.direct_bus_flg_2 = true;
+                          }
+                          console.log( state.direct_buses);
+
+                        })
+                    //},
+                    /*** check if day matches ENDS -> if yes -> push_to_store ***/
+
+
+                  }
+
+                })
+
+
             }
             //console.log("route -> " + route);
             if(route == null)
@@ -283,297 +346,7 @@ export const store = new Vuex.Store({
             router.push("/direct_bus"); /*** go to direct bus ***/
             state.show = true ;
       //      document.getElementById('main-app').style.display="block";
-            /************************* FIND INDIRECT BUS ******************************/
-              console.log("now finding ---- indirect bus -----");
 
-              let src =  state.selected_source.name;
-              let dest =  state.selected_destination.name;
-
-              state.indirect_bus_flg = false;
-              state.indirect_bus_flg2 = false;
-
-              Vue.http.get('city_route_matrix/'+src+'.json')
-                .then(response=>{
-                  return response.json();
-                })
-                .then(wp=>{
-                  for(let k1 in Object.keys(wp)){
-
-                    console.log(Object.keys(wp)[k1]);
-                    Vue.http.get('city_route_matrix/'+src+'/'+Object.keys(wp)[k1]+'.json')
-                      .then(response=>{
-                        return response.json();
-                      })
-                      .then(route1 => {
-                        console.log("route1->"+route1);
-                        for(let k2 in route1){
-                          console.log(route1[k2]);
-                          Vue.http.get('city_route_matrix/'+Object.keys(wp)[k1]+
-                            '/'+dest+'.json')
-                            .then(response=>{
-                              return response.json();
-                            })
-                            .then(route2=>{ //confirm_wp is route2
-                              for(let k3 in route2){
-                                console.log(route2[k3]);
-                                if(route2 != null && route1[k2] != route2[k3] ){
-                                  console.log("X------confirm_wp-----X " +
-                                    Object.keys(wp)[k1] + " <---> "
-                                      + route1[k2] + " <---> " + route2[k3]);
-                                 //
-                                 let route1_str,route2_str;
-                                 Vue.http.get('bus_routes/'+
-                                   route1[k2]+'.json')
-                                  .then(response=>{
-                                    return response.json();
-                                  })
-                                    .then(stops1=>{
-                                        route1_str = '';
-                                        for(let k4 in stops1){
-                                            route1_str+=stops1[k4];
-                                        }
-                                        console.log(route1_str);
-                                        Vue.http.get('bus_routes/'+
-                                          route2[k3]+'.json')
-                                          .then(response=>{
-                                            return response.json();
-                                          })
-                                          .then(stops2=>{
-                                            route2_str='';
-                                            for(let k5 in stops2){
-                                              route2_str+=stops2[k5];
-                                            }
-                                            console.log(route2_str);
-
-                                            //
-                                            if((route1_str.indexOf(src)!=-1
-                                                && route1_str.indexOf(dest)!=-1)
-                                                || (route2_str.indexOf(src)!=-1 &&
-                                                  route2_str.indexOf(dest)!=-1)){
-                                                      console.log("$$$$ oh no $$$$");
-
-                                            }else{
-                                              console.log("### these are indirect routes ###");
-                                              console.log("^^^^^Details Indirect Routes -> "
-                                                + src +" -> "+ Object.keys(wp)[k1] +" => " +
-                                                  route1[k2] + " | " + Object.keys(wp)[k1] +" -> " +
-                                                    dest + " => " + route2[k3]);
-
-
-
-                                              //
-                                              Vue.http.get('buses_on_route/'+
-                                                route1[k2]+'.json')
-                                                .then(response=>{
-                                                  return response.json();
-                                                })
-                                                .then(bus1=>{
-                                                  console.log("%%% bus1 -> "+bus1);
-
-                                                  for(let b1 in bus1){
-                                                    Vue.http.get('bus_day_&_time_from_origin/'+
-                                                      bus1[b1]+'.json')
-                                                      .then(response=>{
-                                                        return response.json();
-                                                      })
-                                                      .then(sch1=>{
-
-                                                        console.log(Object.keys(sch1));
-                                                        for(let s1 in Object.keys(sch1)){
-                                                          console.log(Object.keys(sch1)[s1]);
-                                                          if(Object.keys(sch1)[s1] ==
-                                                            state.selected_date.day_in_week){
-                                                              /** time **/
-
-                                                              console.log(sch1[state.selected_date.day_in_week]);
-
-                                                              /** time **/
-                                                              Vue.http.get('buses_on_route/'+
-                                                                route2[k3]+'.json')
-                                                                .then(response=>{
-                                                                  return response.json();
-                                                                })
-                                                                .then(bus2=>{
-                                                                  console.log("%%% bus2 -> "+bus2);
-
-                                                                  for(let b2 in bus2){
-                                                                    console.log(bus2[b2]);
-                                                                    Vue.http.get('bus_day_&_time_from_origin/'+
-                                                                      bus2[b2]+'.json')
-                                                                      .then(response=>{
-                                                                        return response.json();
-                                                                      })
-                                                                      .then(sch2=>{
-                                                                        console.log(Object.keys(sch2));
-                                                                        for(let s2 in Object.keys(sch2)){
-                                                                          console.log(Object.keys(sch2)[s2]);
-                                                                          if(Object.keys(sch2)[s2] ==
-                                                                            state.selected_date.day_in_week){
-
-
-                                                                              Vue.http.get('bus_routes/'+
-                                                                                route1[k2]+'.json')
-                                                                                .then(response=>{
-                                                                                  return response.json();
-                                                                                })
-                                                                                .then(r1=>{
-                                                                                  console.log(r1);
-                                                                                  let mrk_wp = -1 ;
-                                                                                  for(let k10 in r1){
-                                                                                    console.log(r1[k10]);
-                                                                                    if(r1[k10]==Object.keys(wp)[k1]){
-                                                                                      mrk_wp = k10 ;
-                                                                                      console.log(mrk_wp);
-
-                                                                                      Vue.http.get('travel_time_between_stops_on_route/'
-                                                                                        +route1[k2] +'.json')
-                                                                                        .then(response=>{
-                                                                                          return response.json();
-                                                                                        })
-                                                                                        .then(t1=>{
-
-                                                                                          console.log(t1);
-                                                                                          let sum_t1 = 0;
-                                                                                          for(let k11=0; k11<mrk_wp ; k11++){
-                                                                                            console.log(t1[k11]);
-                                                                                            sum_t1 = sum_t1 + t1[k11];
-
-                                                                                          }
-                                                                                          console.log(sum_t1);
-                                                                                          //origin + sum_t1
-                                                                                          let clock_time_sum = 0;
-                                                                                          clock_time_sum = sum_t1 ;
-                                                                                          for(let k12 in sch1[Object.keys(sch1)[s1]]){
-                                                                                            console.log(sch1[Object.keys(sch1)[s1]][k12]); //origin
-
-
-                                                                                            //add - find new time
-
-                                                                                            let ta =sch1[Object.keys(sch1)[s1]][k12].split(":");
-                                                                                            console.log(ta[0] + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
-                                                                                            let p1  = Math.floor(ta[1])+Math.floor(clock_time_sum);
-                                                                                            console.log("p1"+p1);
-                                                                                            ta[0]=Math.floor(ta[0])+Math.floor(p1/60);
-                                                                                            ta[1]=p1%60;
-                                                                                            //console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
-
-                                                                                            if(Math.floor(ta[0]) > 23){
-                                                                                              ta[0] = Math.floor(ta[0]) - 24 ;
-                                                                                            }
-                                                                                            console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
-
-                                                                                            ta[1]=ta[1].toString();
-                                                                                            console.log(ta[1].length);
-                                                                                            if(ta[1].length == 1)
-                                                                                              ta[1] = "0"+ta[1] ;
-                                                                                            let a_t = ta[0]+":"+ta[1];
-                                                                                            console.log("!!!!!! new time-> !!!!!!"+ a_t); //final time
-                                                                                            //state.arrival_time.push(a_t);
-                                                                                            /** check if this final time is < arrival time **/
-                                                                                            for(let k13 in sch2[Object.keys(sch2)[s2]]){
-                                                                                              console.log(sch2[Object.keys(sch2)[s2]][k13]);
-                                                                                              let ta2 =sch2[Object.keys(sch2)[s2]][k13].split(":");
-                                                                                              if((ta[0] < ta2[0]) || (ta[0] == ta2[0] && ta[1]<ta2[1])){
-
-
-                                                                                                tmp_str += bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
-                                                                                                console.log(tmp_str);
-
-
-                                                                                                console.log(tmp_str2);
-                                                                                                if(tmp_str.indexOf(tmp_str2)==-1){
-
-
-                                                                                                  tmp_str2 = bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
-
-                                                                                                  Vue.http.get('bus_type/'+bus1[b1]+'.json')
-                                                                                                    .then(response=>{
-                                                                                                      return response.json();
-                                                                                                    })
-                                                                                                    .then(b_type1=>{
-                                                                                                      console.log(b_type1[0]);
-
-                                                                                                      Vue.http.get('bus_type/'+bus2[b2]+'.json')
-                                                                                                        .then(response=>{
-                                                                                                          return response.json();
-                                                                                                        })
-                                                                                                        .then(b_type2=>{
-                                                                                                          console.log(b_type2[0]);
-
-                                                                                                          //to dom -> tada =>
-                                                                                                          let indirect_set = {
-                                                                                                            bus_1:{
-                                                                                                              no : bus1[b1],
-                                                                                                              route: route1[k2],
-                                                                                                              wp : Object.keys(wp)[k1],
-                                                                                                              f : 1 ,
-                                                                                                              a_t : a_t,
-                                                                                                              type:b_type1[0]
-                                                                                                            },
-                                                                                                            bus_2:{
-                                                                                                              no : bus2[b2],
-                                                                                                              route:route2[k3],
-                                                                                                              wp : Object.keys(wp)[k1],
-                                                                                                              f : 2,
-                                                                                                              type:b_type2[0]
-                                                                                                            }
-                                                                                                          }
-                                                                                                          state.indirect_bus_flg = true;
-                                                                                                          state.indirect_arr.push(indirect_set);
-                                                                                                          //to dom ends
-
-                                                                                                        })
-
-                                                                                                    })
-
-
-
-                                                                                                }
-                                                                                              }
-                                                                                            }
-                                                                                          }
-
-                                                                                        })
-
-                                                                                    }
-                                                                                  }
-                                                                                })
-
-
-
-                                                                          }
-                                                                        }
-                                                                      })
-                                                                  }
-                                                                })
-                                                          }
-                                                        }
-                                                      })
-                                                  }
-                                                })
-                                              //
-
-                                            }
-                                            state.indirect_bus_flg2 =true;
-                                            //
-
-                                          })
-                                    })
-
-                                 //
-                                }
-                              }
-
-
-                            })
-                        }
-                      })
-
-                  }
-
-                  console.log("line no -> 545 SERIOUSLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                })
-            /************************* FIND INDIRECT BUS ENDS *************************/
 
           })
         /*** get bus route ENDS ***/
@@ -612,76 +385,316 @@ export const store = new Vuex.Store({
         /***** recent ends ****/
 
       }
+
     },
     /*** find bus ENDS ***/
 
 
-    /*** get buses on this route ***/
-    get_bus_on_this_route(state,route){
 
-      console.log("route -> "+ route);
-      Vue.http.get('buses_on_route/'+route+'.json')
-        .then(response=>{
-          return response.json();
-        })
-        .then(buses=>{
-          console.log(buses);
-          for(let j in buses){
-            console.log(buses[j]);
-
-            let bus = buses[j];
-
-            //console.log(check_day);
-            //check_day(buses[j],route);
+    get_indirect_bus_function(state){
 
 
-            /*** check if day matches -> if yes -> push_to_store ***/
-            //check_day(state,bus,route){
-              Vue.http.get('bus_day_&_time_from_origin/'+
-                bus+'.json')
+      /************************* FIND INDIRECT BUS ******************************/
+        console.log("now finding ---- indirect bus -----");
+
+          state.indirect_arr = [];
+
+        let src =  state.selected_source.name;
+        let dest =  state.selected_destination.name;
+
+        state.indirect_bus_flg = false;
+        state.indirect_bus_flg2 = false;
+
+        let tmp_str = '';
+        let tmp_str2 = 'gfgboss:P';
+
+        Vue.http.get('city_route_matrix/'+src+'.json')
+          .then(response=>{
+            return response.json();
+          })
+          .then(wp=>{
+            for(let k1 in Object.keys(wp)){
+
+              console.log(Object.keys(wp)[k1]);
+              Vue.http.get('city_route_matrix/'+src+'/'+Object.keys(wp)[k1]+'.json')
                 .then(response=>{
                   return response.json();
                 })
-                .then(day=>{
-                  console.log(day);
-                  console.log(Object.keys(day));
-                  for(let k in Object.keys(day)){
-                    console.log(Object.keys(day)[k]);
-                    //console.log( state.selected_date.day_in_week);
-                    if(Object.keys(day)[k] ===  state.selected_date.day_in_week){
-                      console.log("show_only this bus -> "+bus);
-                      Vue.http.get('bus_type/'+bus+'.json')
-                        .then(response=>{
-                          return response.json();
-                        })
-                        .then(b_type=>{
-                          console.log(b_type);
-                          let bus_obj = {
-                            no: bus,
-                            route : route,
-                            type : b_type[0]
+                .then(route1 => {
+                  console.log("route1->"+route1);
+                  for(let k2 in route1){
+                    console.log(route1[k2]);
+                    Vue.http.get('city_route_matrix/'+Object.keys(wp)[k1]+
+                      '/'+dest+'.json')
+                      .then(response=>{
+                        return response.json();
+                      })
+                      .then(route2=>{ //confirm_wp is route2
+                        for(let k3 in route2){
+                          console.log(route2[k3]);
+                          if(route2 != null && route1[k2] != route2[k3] ){
+                            console.log("X------confirm_wp-----X " +
+                              Object.keys(wp)[k1] + " <---> "
+                                + route1[k2] + " <---> " + route2[k3]);
+                           //
+                           let route1_str,route2_str;
+                           Vue.http.get('bus_routes/'+
+                             route1[k2]+'.json')
+                            .then(response=>{
+                              return response.json();
+                            })
+                              .then(stops1=>{
+                                  route1_str = '';
+                                  for(let k4 in stops1){
+                                      route1_str+=stops1[k4];
+                                  }
+                                  console.log(route1_str);
+                                  Vue.http.get('bus_routes/'+
+                                    route2[k3]+'.json')
+                                    .then(response=>{
+                                      return response.json();
+                                    })
+                                    .then(stops2=>{
+                                      route2_str='';
+                                      for(let k5 in stops2){
+                                        route2_str+=stops2[k5];
+                                      }
+                                      console.log(route2_str);
+
+                                      //
+                                      if((route1_str.indexOf(src)!=-1
+                                          && route1_str.indexOf(dest)!=-1)
+                                          || (route2_str.indexOf(src)!=-1 &&
+                                            route2_str.indexOf(dest)!=-1)){
+                                                console.log("$$$$ oh no $$$$");
+
+                                      }else{
+                                        console.log("### these are indirect routes ###");
+                                        console.log("^^^^^Details Indirect Routes -> "
+                                          + src +" -> "+ Object.keys(wp)[k1] +" => " +
+                                            route1[k2] + " | " + Object.keys(wp)[k1] +" -> " +
+                                              dest + " => " + route2[k3]);
+
+
+
+                                        //
+                                        Vue.http.get('buses_on_route/'+
+                                          route1[k2]+'.json')
+                                          .then(response=>{
+                                            return response.json();
+                                          })
+                                          .then(bus1=>{
+                                            console.log("%%% bus1 -> "+bus1);
+
+                                            for(let b1 in bus1){
+                                              Vue.http.get('bus_day_&_time_from_origin/'+
+                                                bus1[b1]+'.json')
+                                                .then(response=>{
+                                                  return response.json();
+                                                })
+                                                .then(sch1=>{
+
+                                                  console.log(Object.keys(sch1));
+                                                  for(let s1 in Object.keys(sch1)){
+                                                    console.log(Object.keys(sch1)[s1]);
+                                                    if(Object.keys(sch1)[s1] ==
+                                                      state.selected_date.day_in_week){
+                                                        /** time **/
+
+                                                        console.log(sch1[state.selected_date.day_in_week]);
+
+                                                        /** time **/
+                                                        Vue.http.get('buses_on_route/'+
+                                                          route2[k3]+'.json')
+                                                          .then(response=>{
+                                                            return response.json();
+                                                          })
+                                                          .then(bus2=>{
+                                                            console.log("%%% bus2 -> "+bus2);
+
+                                                            for(let b2 in bus2){
+                                                              console.log(bus2[b2]);
+                                                              Vue.http.get('bus_day_&_time_from_origin/'+
+                                                                bus2[b2]+'.json')
+                                                                .then(response=>{
+                                                                  return response.json();
+                                                                })
+                                                                .then(sch2=>{
+                                                                  console.log(Object.keys(sch2));
+                                                                  for(let s2 in Object.keys(sch2)){
+                                                                    console.log(Object.keys(sch2)[s2]);
+                                                                    if(Object.keys(sch2)[s2] ==
+                                                                      state.selected_date.day_in_week){
+
+
+                                                                        Vue.http.get('bus_routes/'+
+                                                                          route1[k2]+'.json')
+                                                                          .then(response=>{
+                                                                            return response.json();
+                                                                          })
+                                                                          .then(r1=>{
+                                                                            console.log(r1);
+                                                                            let mrk_wp = -1 ;
+                                                                            for(let k10 in r1){
+                                                                              console.log(r1[k10]);
+                                                                              if(r1[k10]==Object.keys(wp)[k1]){
+                                                                                mrk_wp = k10 ;
+                                                                                console.log(mrk_wp);
+
+                                                                                Vue.http.get('travel_time_between_stops_on_route/'
+                                                                                  +route1[k2] +'.json')
+                                                                                  .then(response=>{
+                                                                                    return response.json();
+                                                                                  })
+                                                                                  .then(t1=>{
+
+                                                                                    console.log(t1);
+                                                                                    let sum_t1 = 0;
+                                                                                    for(let k11=0; k11<mrk_wp ; k11++){
+                                                                                      console.log(t1[k11]);
+                                                                                      sum_t1 = sum_t1 + t1[k11];
+
+                                                                                    }
+                                                                                    console.log(sum_t1);
+                                                                                    //origin + sum_t1
+                                                                                    let clock_time_sum = 0;
+                                                                                    clock_time_sum = sum_t1 ;
+                                                                                    for(let k12 in sch1[Object.keys(sch1)[s1]]){
+                                                                                      console.log(sch1[Object.keys(sch1)[s1]][k12]); //origin
+
+
+                                                                                      //add - find new time
+
+                                                                                      let ta =sch1[Object.keys(sch1)[s1]][k12].split(":");
+                                                                                      console.log(ta[0] + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+                                                                                      let p1  = Math.floor(ta[1])+Math.floor(clock_time_sum);
+                                                                                      console.log("p1"+p1);
+                                                                                      ta[0]=Math.floor(ta[0])+Math.floor(p1/60);
+                                                                                      ta[1]=p1%60;
+                                                                                      //console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                                                                                      if(Math.floor(ta[0]) > 23){
+                                                                                        ta[0] = Math.floor(ta[0]) - 24 ;
+                                                                                      }
+                                                                                      console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                                                                                      ta[1]=ta[1].toString();
+                                                                                      console.log(ta[1].length);
+                                                                                      if(ta[1].length == 1)
+                                                                                        ta[1] = "0"+ta[1] ;
+                                                                                      let a_t = ta[0]+":"+ta[1];
+                                                                                      console.log("!!!!!! new time-> !!!!!!"+ a_t); //final time
+                                                                                      //state.arrival_time.push(a_t);
+                                                                                      /** check if this final time is < arrival time **/
+                                                                                      for(let k13 in sch2[Object.keys(sch2)[s2]]){
+                                                                                        console.log(sch2[Object.keys(sch2)[s2]][k13]);
+                                                                                        let ta2 =sch2[Object.keys(sch2)[s2]][k13].split(":");
+                                                                                        if((ta[0] < ta2[0]) || (ta[0] == ta2[0] && ta[1]<ta2[1])){
+
+
+                                                                                          tmp_str += bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
+                                                                                          console.log(tmp_str);
+
+
+                                                                                          console.log(tmp_str2);
+                                                                                          if(tmp_str.indexOf(tmp_str2)==-1){
+
+
+                                                                                            tmp_str2 = bus1[b1]+"-"+Object.keys(wp)[k1]+"-"+bus2[b2];
+
+                                                                                            Vue.http.get('bus_type/'+bus1[b1]+'.json')
+                                                                                              .then(response=>{
+                                                                                                return response.json();
+                                                                                              })
+                                                                                              .then(b_type1=>{
+                                                                                                console.log(b_type1[0]);
+
+                                                                                                Vue.http.get('bus_type/'+bus2[b2]+'.json')
+                                                                                                  .then(response=>{
+                                                                                                    return response.json();
+                                                                                                  })
+                                                                                                  .then(b_type2=>{
+                                                                                                    console.log(b_type2[0]);
+
+                                                                                                    //to dom -> tada =>
+                                                                                                    let indirect_set = {
+                                                                                                      bus_1:{
+                                                                                                        no : bus1[b1],
+                                                                                                        route: route1[k2],
+                                                                                                        wp : Object.keys(wp)[k1],
+                                                                                                        f : 1 ,
+                                                                                                        a_t : a_t,
+                                                                                                        type:b_type1[0]
+                                                                                                      },
+                                                                                                      bus_2:{
+                                                                                                        no : bus2[b2],
+                                                                                                        route:route2[k3],
+                                                                                                        wp : Object.keys(wp)[k1],
+                                                                                                        f : 2,
+                                                                                                        type:b_type2[0]
+                                                                                                      }
+                                                                                                    }
+                                                                                                    state.indirect_bus_flg = true;
+                                                                                                    state.indirect_arr.push(indirect_set);
+                                                                                                    //to dom ends
+                                                                                                  //  router.push("/indirect_bus");
+                                                                                                  })
+
+                                                                                              })
+
+
+
+                                                                                          }
+                                                                                        }
+                                                                                      }
+                                                                                    }
+
+                                                                                  })
+
+                                                                              }
+                                                                            }
+                                                                          })
+
+
+
+                                                                    }
+                                                                  }
+                                                                })
+                                                            }
+                                                          })
+                                                    }
+                                                  }
+                                                })
+                                            }
+                                          })
+                                        //
+
+                                      }
+                                      state.indirect_bus_flg2 =true;
+                                      //
+
+                                    })
+                              })
+
+                           //
                           }
-                           state.direct_bus_flg = true;
-                          console.log("cnt");
-                           state.direct_buses.push(bus_obj);
-                        })
+                        }
 
-                    }
-                     state.direct_bus_flg_2 = true;
+
+                      })
                   }
-                  console.log( state.direct_buses);
-
                 })
-            //},
-            /*** check if day matches ENDS -> if yes -> push_to_store ***/
 
+            }
 
-          }
+            console.log("line no -> 545 SERIOUSLY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-        })
+          })
+      /************************* FIND INDIRECT BUS ENDS *************************/
+
 
     },
-    /*** get buses on this routes ENDS ***/
+
 
 
     /************************ FIND BUS ENDS - Direct Bus **********************/

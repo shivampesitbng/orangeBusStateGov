@@ -9,7 +9,7 @@
 
         <li v-for="bus in direct_buses">
           {{bus.no}} - {{bus.type}}
-          <button @click="get_bus_route(bus)">route</button>
+          <button @click="pb();get_bus_route(bus);">route</button>
         </li>
 
         <p v-if="direct_bus_flg == false && direct_bus_flg_2==true">NO DIRECT BUS ON THIS ROUTE !</p>
@@ -17,11 +17,11 @@
       </v-card>
     </v-container>
 </transition >
-
+<!--v-if="this.$store.state.indirect_bus_flg"-->
   <transition name="fade">
     <!-- footer -->
       <v-bottom-nav
-        v-if="this.$store.state.indirect_bus_flg"
+
         absolute
         shift
         value="true"
@@ -61,13 +61,22 @@ export default{
     ...mapMutations([
       'get_bus_route'
     ]),
+    pb(){
+      this.$Progress.start();
+      setTimeout(()=>{
+          this.$Progress.finish();
+      },2000);
 
+    },
     /*** go to indirect_bus ***/
     go_to_indirect_bus(){
-      //console.log("goign to indirect bus");
-      //document.getElementById('main-app').style.display="none";
+
+      this.$Progress.start();
+      setTimeout(()=>{
+          this.$Progress.finish();
+      },3000);
       this.$router.push('/indirect_bus');
-      //document.getElementById('main-app').style.display="block";
+
     },
     /*** go to indirect_bus ends ***/
     show_again(){

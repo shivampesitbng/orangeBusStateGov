@@ -49,7 +49,7 @@
 
 
       <v-btn primary fab  dark style="margin-top:10%;"
-        @click="find_bus(get_bus_on_this_route);">
+        @click="nxt_pg">
         <v-icon>&#xE409</v-icon>
       </v-btn>
 
@@ -95,7 +95,7 @@ export default {
   //functions
   methods:{
     ...mapMutations([
-      'find_bus','get_bus_on_this_route'
+
     ]),
     test_method(){
       this.test_var_2 = this.$store.state.test_var ; // accessing from mapGetter
@@ -103,6 +103,20 @@ export default {
       //console.log(this.$store.state.get_bus_on_this_route);
       //console.log(this.$store.state.check_day);
     },
+    nxt_pg(){
+
+      this.$Progress.start();
+
+        this.$store.commit('find_bus')
+
+        this.$store.commit('get_indirect_bus_function')
+
+        setTimeout(()=>{
+            this.$Progress.finish();
+        },3000);
+
+
+    }
   },
   //methods ends
 
