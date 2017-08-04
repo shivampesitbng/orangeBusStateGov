@@ -372,11 +372,17 @@ export const store = new Vuex.Store({
                                                         return response.json();
                                                       })
                                                       .then(sch1=>{
+
                                                         console.log(Object.keys(sch1));
                                                         for(let s1 in Object.keys(sch1)){
                                                           console.log(Object.keys(sch1)[s1]);
                                                           if(Object.keys(sch1)[s1] ==
                                                             state.selected_date.day_in_week){
+                                                              /** time **/
+
+                                                              console.log(sch1[state.selected_date.day_in_week]);
+
+                                                              /** time **/
                                                               Vue.http.get('buses_on_route/'+
                                                                 route2[k3]+'.json')
                                                                 .then(response=>{
@@ -399,23 +405,101 @@ export const store = new Vuex.Store({
                                                                           if(Object.keys(sch2)[s2] ==
                                                                             state.selected_date.day_in_week){
 
-                                                                              //to dom -> tada =>
-                                                                              let indirect_set = {
-                                                                                bus_1:{
-                                                                                  no : bus1[b1],
-                                                                                  route: route1[k2],
-                                                                                  wp : Object.keys(wp)[k1],
-                                                                                  f : 1
-                                                                                },
-                                                                                bus_2:{
-                                                                                  no : bus2[b2],
-                                                                                  route:route2[k3],
-                                                                                  wp : Object.keys(wp)[k1],
-                                                                                  f : 2
-                                                                                }
-                                                                              }
-                                                                              state.indirect_bus_flg = true;
-                                                                              state.indirect_arr.push(indirect_set);
+
+                                                                              Vue.http.get('bus_routes/'+
+                                                                                route1[k2]+'.json')
+                                                                                .then(response=>{
+                                                                                  return response.json();
+                                                                                })
+                                                                                .then(r1=>{
+                                                                                  console.log(r1);
+                                                                                  let mrk_wp = -1 ;
+                                                                                  for(let k10 in r1){
+                                                                                    console.log(r1[k10]);
+                                                                                    if(r1[k10]==Object.keys(wp)[k1]){
+                                                                                      mrk_wp = k10 ;
+                                                                                      console.log(mrk_wp);
+
+                                                                                      Vue.http.get('travel_time_between_stops_on_route/'
+                                                                                        +route1[k2] +'.json')
+                                                                                        .then(response=>{
+                                                                                          return response.json();
+                                                                                        })
+                                                                                        .then(t1=>{
+                                                                                          console.log(t1);
+                                                                                          let sum_t1 = 0;
+                                                                                          for(let k11=0; k11<mrk_wp ; k11++){
+                                                                                            console.log(t1[k11]);
+                                                                                            sum_t1 = sum_t1 + t1[k11];
+
+                                                                                          }
+                                                                                          console.log(sum_t1);
+                                                                                          //origin + sum_t1
+                                                                                          let clock_time_sum = 0;
+                                                                                          clock_time_sum = sum_t1 ;
+                                                                                          for(let k12 in sch1[Object.keys(sch1)[s1]]){
+                                                                                            console.log(sch1[Object.keys(sch1)[s1]][k12]); //origin
+
+
+                                                                                            //add - find new time
+
+                                                                                            let ta =sch1[Object.keys(sch1)[s1]][k12].split(":");
+                                                                                            console.log(ta[0] + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+                                                                                            let p1  = Math.floor(ta[1])+Math.floor(clock_time_sum);
+                                                                                            console.log("p1"+p1);
+                                                                                            ta[0]=Math.floor(ta[0])+Math.floor(p1/60);
+                                                                                            ta[1]=p1%60;
+                                                                                            //console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                                                                                            if(Math.floor(ta[0]) > 23){
+                                                                                              ta[0] = Math.floor(ta[0]) - 24 ;
+                                                                                            }
+                                                                                            console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                                                                                            ta[1]=ta[1].toString();
+                                                                                            console.log(ta[1].length);
+                                                                                            if(ta[1].length == 1)
+                                                                                              ta[1] = "0"+ta[1] ;
+                                                                                            let a_t = ta[0]+":"+ta[1];
+                                                                                            console.log("!!!!!! new time-> !!!!!!"+ a_t); //final time
+                                                                                            //state.arrival_time.push(a_t);
+                                                                                            /** check if this final time is < arrival time **/
+                                                                                            for(let k13 in sch2[Object.keys(sch2)[s2]]){
+                                                                                              console.log(sch2[Object.keys(sch2)[s2]][k13]);
+                                                                                              let ta2 =sch2[Object.keys(sch2)[s2]][k13].split(":");
+                                                                                              if((ta[0] < ta2[0]) || ta[0] == ta2[0] && ta[1]<ta2[1]){
+
+
+                                                                                                //to dom -> tada =>
+                                                                                                let indirect_set = {
+                                                                                                  bus_1:{
+                                                                                                    no : bus1[b1],
+                                                                                                    route: route1[k2],
+                                                                                                    wp : Object.keys(wp)[k1],
+                                                                                                    f : 1 ,
+                                                                                                    a_t : a_t
+                                                                                                  },
+                                                                                                  bus_2:{
+                                                                                                    no : bus2[b2],
+                                                                                                    route:route2[k3],
+                                                                                                    wp : Object.keys(wp)[k1],
+                                                                                                    f : 2
+                                                                                                  }
+                                                                                                }
+                                                                                                state.indirect_bus_flg = true;
+                                                                                                state.indirect_arr.push(indirect_set);
+                                                                                                //to dom ends
+
+                                                                                              }
+                                                                                            }
+                                                                                          }
+
+                                                                                        })
+                                                                                    }
+                                                                                  }
+                                                                                })
+
+
 
                                                                           }
                                                                         }

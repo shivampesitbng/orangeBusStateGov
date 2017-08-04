@@ -114,16 +114,38 @@ export default {
         console.log("/////////////////"+ y[i]);
         this.$store.state.recent.push(y[i]);
       }
+    },
+    today_day(){
+      let d = new Date();
+      let dv = d.getDay();
+      console.log(dv);
+      if(dv == 0){
+        this.$store.state.selected_date.day_in_week = "SU";
+      }else if(dv == 1){
+        this.$store.state.selected_date.day_in_week = "M";
+      }else if(dv == 2){
+        this.$store.state.selected_date.day_in_week = "TU";
+      }else if(dv == 3){
+        this.$store.state.selected_date.day_in_week = "W";
+      }else if(dv == 4){
+        this.$store.state.selected_date.day_in_week = "TH";
+      }else if(dv == 5){
+        this.$store.state.selected_date.day_in_week = "F";
+      }else if(dv == 6){
+        this.$store.state.selected_date.day_in_week = "SA";
+      }
+      console.log("Todays Day -> "+ this.$store.state.selected_date.day_in_week);
     }
   },
   computed:{
     ...mapGetters([
-      'recent'
+      'recent','selected_date'
     ]),
 
   },
   beforeMount(){
     this.load_recent_log();
+    this.today_day();
   }
 }
 

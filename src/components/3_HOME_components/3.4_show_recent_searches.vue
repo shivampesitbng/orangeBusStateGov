@@ -24,6 +24,7 @@ export default{
   methods:{
     rm_recent(i,len){
       this.$store.state.recent.splice(len-1-i,1);
+      localStorage.setItem('recent_log', JSON.stringify(this.$store.state.recent));
     }
   },
   computed:{
