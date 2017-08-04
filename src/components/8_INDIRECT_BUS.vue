@@ -5,17 +5,25 @@
 
         <li v-for="set in indirect_arr" >
 
-          {{set.wp}} |
-
-          <span v-for='bus in set.bus_1.no'>
+          <span>
+            {{set.bus_1.no}}
+            <button @click="get_bus_route(set.bus_1)">route</button>
+          </span>
+          <!--span v-for='bus in set.bus_1.no'>
             {{bus}}
             <button @click="get_bus_route(set.bus_1)">route</button>
-          </span> |
+          </span--> |
 
-          <span v-for='bus in set.bus_2.no'>
-            {{bus}}
+          {{set.bus_1.wp}} |
+
+          <span>
+            {{set.bus_2.no}}
             <button @click="get_bus_route(set.bus_2)">route</button>
           </span>
+          <!--span v-for='bus in set.bus_2.no'>
+            {{bus}}
+            <button @click="get_bus_route(set.bus_2)">route</button>
+          </span-->
 
         </li>
 

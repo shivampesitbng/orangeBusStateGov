@@ -5,6 +5,8 @@
 
         <!--p>direct buses route</p-->
 
+        <span v-for="at in arrival_time"> {{at}} </span>
+
         <v-layout row>
 
           <v-flex xs4 >
@@ -52,7 +54,7 @@ export default{
   },
   computed:{
     ...mapGetters([
-      'bus_route','bus_dist','bus_time',
+      'bus_route','bus_dist','bus_time','arrival_time'
     ]),
   },
   beforeMount(){

@@ -52,7 +52,7 @@ export const store = new Vuex.Store({
 
     indirect_bus_flg2 : false,
 
-
+    arrival_time:[],
 
     // bus destail ->  route , dist ,time
     bus_route : [],
@@ -158,6 +158,10 @@ export const store = new Vuex.Store({
       return state.time_sum_frm_origin_to_src;
     },
 
+    arrival_time : state =>{
+      return state.arrival_time;
+    },
+
     //recent
     recent : state => {
       return state.recent ;
@@ -213,12 +217,16 @@ export const store = new Vuex.Store({
       }else{
 
 
+       let z = {
+          day_in_week : state.selected_date.day_in_week
+        }
+
         /***** recent ****/
         let recent_obj = {
           id:  state.selected_source.name+"-"+state.selected_destination.name+"-"+state.selected_date.day_in_week,
           src : state.selected_source,
           dest: state.selected_destination,
-          date : state.selected_date,
+          date : z,
         }
         let flg_recent =false;
         if(state.recent.length == 0){
@@ -346,7 +354,7 @@ export const store = new Vuex.Store({
                                                   route1[k2] + " | " + Object.keys(wp)[k1] +" -> " +
                                                     dest + " => " + route2[k3]);
 
-                                              state.indirect_bus_flg = true;
+
 
                                               //
                                               Vue.http.get('buses_on_route/'+
@@ -356,32 +364,68 @@ export const store = new Vuex.Store({
                                                 })
                                                 .then(bus1=>{
                                                   console.log("%%% bus1 -> "+bus1);
-                                                  Vue.http.get('buses_on_route/'+
-                                                    route2[k3]+'.json')
-                                                    .then(response=>{
-                                                      return response.json();
-                                                    })
-                                                    .then(bus2=>{
-                                                      console.log("%%% bus2 -> "+bus2);
-                                                      //to dom -> tada =>
-                                                      let indirect_set = {
-                                                        wp : Object.keys(wp)[k1],
-                                                        bus_1:{
-                                                          no : bus1,
-                                                          route: route1[k2],
-                                                          wp : Object.keys(wp)[k1],
-                                                          f : 1
-                                                        },
-                                                        bus_2:{
-                                                          no : bus2,
-                                                          route:route2[k3],
-                                                          wp : Object.keys(wp)[k1],
-                                                          f : 2
-                                                        }
-                                                      }
-                                                      state.indirect_arr.push(indirect_set);
-                                                    })
 
+                                                  for(let b1 in bus1){
+                                                    Vue.http.get('bus_day_&_time_from_origin/'+
+                                                      bus1[b1]+'.json')
+                                                      .then(response=>{
+                                                        return response.json();
+                                                      })
+                                                      .then(sch1=>{
+                                                        console.log(Object.keys(sch1));
+                                                        for(let s1 in Object.keys(sch1)){
+                                                          console.log(Object.keys(sch1)[s1]);
+                                                          if(Object.keys(sch1)[s1] ==
+                                                            state.selected_date.day_in_week){
+                                                              Vue.http.get('buses_on_route/'+
+                                                                route2[k3]+'.json')
+                                                                .then(response=>{
+                                                                  return response.json();
+                                                                })
+                                                                .then(bus2=>{
+                                                                  console.log("%%% bus2 -> "+bus2);
+
+                                                                  for(let b2 in bus2){
+                                                                    console.log(bus2[b2]);
+                                                                    Vue.http.get('bus_day_&_time_from_origin/'+
+                                                                      bus2[b2]+'.json')
+                                                                      .then(response=>{
+                                                                        return response.json();
+                                                                      })
+                                                                      .then(sch2=>{
+                                                                        console.log(Object.keys(sch2));
+                                                                        for(let s2 in Object.keys(sch2)){
+                                                                          console.log(Object.keys(sch2)[s2]);
+                                                                          if(Object.keys(sch2)[s2] ==
+                                                                            state.selected_date.day_in_week){
+
+                                                                              //to dom -> tada =>
+                                                                              let indirect_set = {
+                                                                                bus_1:{
+                                                                                  no : bus1[b1],
+                                                                                  route: route1[k2],
+                                                                                  wp : Object.keys(wp)[k1],
+                                                                                  f : 1
+                                                                                },
+                                                                                bus_2:{
+                                                                                  no : bus2[b2],
+                                                                                  route:route2[k3],
+                                                                                  wp : Object.keys(wp)[k1],
+                                                                                  f : 2
+                                                                                }
+                                                                              }
+                                                                              state.indirect_bus_flg = true;
+                                                                              state.indirect_arr.push(indirect_set);
+
+                                                                          }
+                                                                        }
+                                                                      })
+                                                                  }
+                                                                })
+                                                          }
+                                                        }
+                                                      })
+                                                  }
                                                 })
                                               //
 
@@ -483,6 +527,8 @@ export const store = new Vuex.Store({
       state.bus_time = [];
       let got_src = false , got_dest = false;
       let mrk_src = -1 ,mrk_dest = -1 ;
+      let clock_time_sum = 0;
+      state.arrival_time = [];
 
       let usr_src = state.selected_source.name;
       let usr_dest=state.selected_destination.name;
@@ -563,16 +609,21 @@ export const store = new Vuex.Store({
             .then(time=>{
               console.log("time-> "+ time);
               let time_sum = 0;
-              state.bus_time.push("0 min");
+              state.bus_time.push("0 h 0 m");
               for(let i = mrk_src; i < mrk_dest; i++){
                 console.log(time[i]);
                 //state.bus_time.push(time[i]);
                 time_sum = time_sum + time[i];
-                state.bus_time.push(time_sum+ " min ");
+                //state.bus_time.push(time_sum+ " min ");
                 //time_in_hr = change_min_to_hr(time_sum); //ANKIT FUNC2
+                let h  = time_sum / 60 ;
+                 h = Math.floor(h);
+                let m = time_sum % 60 ;
+                let h_m = h+" h "+m+ " m " ;
+                state.bus_time.push(h_m);
               }
               //
-              let clock_time_sum = 0;
+              clock_time_sum = 0;
               for(let i =0; i<mrk_src ; i++){
                 console.log(time[i]);
                 clock_time_sum = clock_time_sum + time[i];
@@ -596,6 +647,31 @@ export const store = new Vuex.Store({
                 console.log(clock_time[i]);
                 //new_clock_time = ankit_function(clock_time[i],clock_time_sum);
                   //clock_time[i] is in form 12:30 & clock_time_sum is in min
+
+                /*let h2  = time_sum / 60 ;
+                  h2 = Math.floor(h2);
+                let m2 = time_sum % 60 ;*/
+
+                let ta =clock_time[i].split(":");
+                console.log(ta[0] + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+                let p1  = Math.floor(ta[1])+Math.floor(clock_time_sum);
+                console.log("p1"+p1);
+                ta[0]=Math.floor(ta[0])+Math.floor(p1/60);
+                ta[1]=p1%60;
+                //console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                if(Math.floor(ta[0]) > 23){
+                  ta[0] = Math.floor(ta[0]) - 24 ;
+                }
+                console.log(ta[0] + " final^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ "+ta[1]);
+
+                ta[1]=ta[1].toString();
+                console.log(ta[1].length);
+                if(ta[1].length == 1)
+                  ta[1] = "0"+ta[1] ;
+                let a_t = ta[0]+":"+ta[1];
+                state.arrival_time.push(a_t);
+
               }
               router.push("/show_bus_route"); //*** bus_route_screen
             })

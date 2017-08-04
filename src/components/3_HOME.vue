@@ -52,6 +52,7 @@
       </v-btn>
 
 
+      <show_selected_date></show_selected_date>
       <show_recent_searches></show_recent_searches>
 
     </v-container fluid>
@@ -72,7 +73,7 @@ import {mapMutations} from 'vuex'
 import show_selected_source from './3_HOME_components/3.1_show_selected_source'
 import show_selected_destination from './3_HOME_components/3.2_show_selected_destination'
 import show_recent_searches from './3_HOME_components/3.4_show_recent_searches'
-
+import show_selected_date from './3_HOME_components/3.3_show_selected_date'
 
 
 
@@ -106,7 +107,7 @@ export default {
     by changing the other variables dependent on the changed one => must return something */
   computed:{
       ...mapGetters([
-        'selected_date'
+
       ]),
   },
   //computed ends
@@ -120,7 +121,8 @@ export default {
   components: {
     'show_selected_source' : show_selected_source,
     'show_selected_destination' : show_selected_destination,
-    'show_recent_searches':show_recent_searches
+    'show_recent_searches':show_recent_searches,
+    'show_selected_date':show_selected_date
   }
 
 }
